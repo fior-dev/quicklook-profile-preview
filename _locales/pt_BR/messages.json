@@ -2,5 +2,6 @@
   "extName": { "message": "QuickLook - Profile Preview" },
   "extDescription": { "message": "Veja o resumo de uma pessoa do LinkedIn ao passar o mouse, sem sair da página." },
   "cardLoading": { "message": "Carregando…" },
-  "cardError": { "message": "Não foi possível carregar este perfil." }
+  "cardError": { "message": "Não foi possível carregar este perfil." },
+  "cardClose": { "message": "Fechar" }
 }

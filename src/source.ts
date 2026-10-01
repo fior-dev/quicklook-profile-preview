@@ -44,3 +44,19 @@ export async function fetchPersonSummary(slug: string, deps: SourceDeps): Promis
     clearTimeout(timer);
   }
 }
+
+// Slug do próprio Usuário, para não abrir Card sobre ele. Formato de `/me` NÃO confirmado; se falhar, devolve null e o Card abre normal.
+export async function fetchOwnSlug(deps: SourceDeps): Promise<string | null> {
+  try {
+    const res = await deps.fetch("/voyager/api/me", {
+      credentials: "include",
+      headers: { accept: "application/vnd.linkedin.normalized+json+2.1", "csrf-token": csrfFrom(deps.cookie) },
+    });
+    if (!res.ok) return null;
+    const json: any = await res.json();
+    const pool = [json?.data, ...(json?.included ?? [])];
+    return pool.find((o) => typeof o?.publicIdentifier === "string")?.publicIdentifier ?? null;
+  } catch {
+    return null;
+  }
+}
