@@ -1,1 +1,1 @@
-export const t = (key: string): string => chrome.i18n.getMessage(key);
+export const t = (key: string, ...subs: string[]): string => chrome.i18n.getMessage(key, subs);

@@ -1,5 +1,5 @@
 export type PersonSummary = { name: string; headline: string };
-export type SourceResult = { person: Partial<PersonSummary>; failed: (keyof PersonSummary)[] };
+export type SourceResult = { person: Partial<PersonSummary>; failed: (keyof PersonSummary)[]; rateLimited?: boolean };
 export type SourceDeps = { fetch: typeof fetch; cookie: string; timeoutMs?: number };
 
 // Endpoint e formato vistos na referência, ainda NÃO confirmados no LinkedIn ao vivo (ticket #2).
@@ -26,7 +26,7 @@ export async function fetchPersonSummary(slug: string, deps: SourceDeps): Promis
       signal: ctl.signal,
       headers: { accept: "application/vnd.linkedin.normalized+json+2.1", "csrf-token": csrfFrom(deps.cookie) },
     });
-    if (!res.ok) return none;
+    if (!res.ok) return res.status === 429 ? { ...none, rateLimited: true } : none;
     const p = findProfile(await res.json());
     if (!p) return none;
     const name = [p.firstName, p.lastName].filter(Boolean).join(" ");

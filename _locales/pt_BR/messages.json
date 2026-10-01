@@ -3,5 +3,7 @@
   "extDescription": { "message": "Veja o resumo de uma pessoa do LinkedIn ao passar o mouse, sem sair da página." },
   "cardLoading": { "message": "Carregando…" },
   "cardError": { "message": "Não foi possível carregar este perfil." },
-  "cardClose": { "message": "Fechar" }
+  "cardClose": { "message": "Fechar" },
+  "cardWait": { "message": "Muitas buscas seguidas. Aguarde alguns segundos." },
+  "cardBackoff": { "message": "O LinkedIn está limitando as requisições. Tente de novo em $1 s." }
 }

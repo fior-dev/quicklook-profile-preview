@@ -1,4 +1,5 @@
-import { createCard } from "./Card";
+import { createCard, type CardState } from "./Card";
+import { createGuard, type Store } from "./guard";
 import { fetchOwnSlug, fetchPersonSummary } from "./source";
 
 const HOVER_MS = 400;
@@ -14,7 +15,8 @@ export function personSlug(a: HTMLAnchorElement): string | null {
 
 const triggerOf = (n: EventTarget | null) => (n as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
 
-export function start(doc: Document, deps: { fetch: typeof fetch }) {
+export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store }) {
+  const guard = createGuard(deps.storage, (slug) => fetchPersonSummary(slug, { fetch: deps.fetch, cookie: doc.cookie }));
   let open: ReturnType<typeof setTimeout> | undefined;
   let close: ReturnType<typeof setTimeout> | undefined;
   let current = 0; // invalida buscas em andamento quando o Card fecha ou troca de alvo
@@ -55,9 +57,20 @@ export function start(doc: Document, deps: { fetch: typeof fetch }) {
       shown = a;
       const rect = a.getBoundingClientRect();
       card.show({ kind: "loading" }, rect);
-      const { person, failed } = await fetchPersonSummary(slug, { fetch: deps.fetch, cookie: cookie() });
+      let state: CardState;
+      try {
+        const r = await guard.person(slug, doc.documentElement.lang);
+        state =
+          "limited" in r
+            ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
+            : r.failed.length === 2
+              ? { kind: "error" }
+              : { kind: "ready", person: r.person };
+      } catch {
+        state = { kind: "error" };
+      }
       if (id !== current) return;
-      card.show(failed.length === 2 ? { kind: "error" } : { kind: "ready", person }, rect);
+      card.show(state, rect);
     }, HOVER_MS);
   });
 
@@ -71,4 +84,4 @@ export function start(doc: Document, deps: { fetch: typeof fetch }) {
 }
 
 // ponytail: o teste importa `start` direto; só a extensão real (chrome.runtime.id) dispara sozinha.
-if (typeof chrome !== "undefined" && chrome.runtime?.id) start(document, { fetch: window.fetch.bind(window) });
+if (typeof chrome !== "undefined" && chrome.runtime?.id) start(document, { fetch: window.fetch.bind(window), storage: chrome.storage.session });
