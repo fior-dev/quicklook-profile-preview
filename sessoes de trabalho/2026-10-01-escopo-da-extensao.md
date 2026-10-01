@@ -31,13 +31,15 @@ Tudo pelo agente: `git init` foi feito pelo José; o agente criou `reference/`, 
 
 ## Aberto
 
-1. Quebrar o spec em tickets com `/to-tickets`, ainda no Opus; depois trocar para Sonnet.
+1. Começar a implementação pelo ticket #2 (tracer bullet), já no Sonnet.
 2. `LICENSE` MIT ainda não adicionada ao repositório.
 3. Arquivos fora de `docs/` ficam sem commit, por decisão do José.
 
 Resolvido no fim da sessão: seams confirmados; as skills de fluxo estão instaladas (eu errei ao dizer que não estavam, olhei só a lista da sessão); "30%" é 30% da janela usados; criei o repositório público `fior-dev/quicklook-profile-preview` via MCP do GitHub e empurrei `main`.
 
 Os itens também estão em `docs/PENDENCIAS.md`.
+
+Depois rodei `/setup-matt-pocock-skills` (GitHub Issues, labels padrão, single-context) e publiquei o spec como issue #1 e os 17 tickets como #2 a #18, sub-issues de #1 com bloqueios nativos. Um `POST .../dependencies/blocked_by` devolveu 504 no meio; conferi o estado no GitHub antes de retomar, e o bloqueio faltante (#11 em #15) foi adicionado no resume. Lição: depois de um 5xx do GitHub, verificar o que de fato foi criado antes de repetir.
 
 ## Arquivos desta sessão
 
