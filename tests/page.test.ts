@@ -127,6 +127,14 @@ describe("página com Gatilhos de Pessoa", () => {
     expect(profileCalls()).toHaveLength(0);
   });
 
+  it("slug com acento no href é codificado uma vez só na requisição", async () => {
+    document.body.insertAdjacentHTML("beforeend", '<a id="acento" href="/in/fl%C3%A1vio-marques/">Flávio</a>');
+    await openOn(document.getElementById("acento")!);
+    const url = profileCalls()[0][0] as string;
+    expect(url).toContain("memberIdentity=fl%C3%A1vio-marques");
+    expect(url).not.toContain("%25");
+  });
+
   it("Gatilho inserido depois do carregamento funciona", async () => {
     document.body.insertAdjacentHTML("beforeend", '<a id="novo" href="/in/dani-exemplo/">Dani</a>');
     await openOn(document.getElementById("novo")!);

@@ -10,7 +10,14 @@ const CLOSE_MS = 300;
 export function personSlug(a: HTMLAnchorElement): string | null {
   const u = new URL(a.getAttribute("href") ?? "", "https://www.linkedin.com/");
   if (u.hostname !== "www.linkedin.com") return null;
-  return /^\/in\/([^/]+)\/?$/.exec(u.pathname)?.[1] ?? null;
+  const raw = /^\/in\/([^/]+)\/?$/.exec(u.pathname)?.[1];
+  if (!raw) return null;
+  // O href já vem codificado ("fl%C3%A1vio"); devolvemos o slug puro para a Fonte codificar uma vez só.
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
 }
 
 const triggerOf = (n: EventTarget | null) => (n as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
