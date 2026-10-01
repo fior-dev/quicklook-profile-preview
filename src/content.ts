@@ -10,7 +10,8 @@ const CLOSE_MS = 300;
 export function personSlug(a: HTMLAnchorElement): string | null {
   const u = new URL(a.getAttribute("href") ?? "", "https://www.linkedin.com/");
   if (u.hostname !== "www.linkedin.com") return null;
-  const raw = /^\/in\/([^/]+)\/?$/.exec(u.pathname)?.[1];
+  // Sufixo de idioma opcional ("/in/slug/pt/") marca o Perfil secundário; por ora o Card usa o perfil principal.
+  const raw = /^\/in\/([^/]+)(?:\/[a-z]{2})?\/?$/.exec(u.pathname)?.[1];
   if (!raw) return null;
   // O href já vem codificado ("fl%C3%A1vio"); devolvemos o slug puro para a Fonte codificar uma vez só.
   try {

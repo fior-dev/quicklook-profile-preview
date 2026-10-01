@@ -135,6 +135,13 @@ describe("página com Gatilhos de Pessoa", () => {
     expect(url).not.toContain("%25");
   });
 
+  it("link com sufixo de idioma (/in/slug/pt/) também é Gatilho", async () => {
+    document.body.insertAdjacentHTML("beforeend", '<a id="idioma" href="https://www.linkedin.com/in/andre-exemplo/pt/">André</a>');
+    await openOn(document.getElementById("idioma")!);
+    expect(profileCalls()[0][0]).toContain("memberIdentity=andre-exemplo");
+    expect(profileCalls()[0][0]).not.toContain("%2F");
+  });
+
   it("Gatilho inserido depois do carregamento funciona", async () => {
     document.body.insertAdjacentHTML("beforeend", '<a id="novo" href="/in/dani-exemplo/">Dani</a>');
     await openOn(document.getElementById("novo")!);
