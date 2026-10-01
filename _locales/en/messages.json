@@ -3,5 +3,7 @@
   "extDescription": { "message": "See a LinkedIn person's summary on hover, without leaving the page." },
   "cardLoading": { "message": "Loading…" },
   "cardError": { "message": "This profile could not be loaded." },
-  "cardClose": { "message": "Close" }
+  "cardClose": { "message": "Close" },
+  "cardWait": { "message": "Too many lookups in a row. Wait a few seconds." },
+  "cardBackoff": { "message": "LinkedIn is limiting requests. Try again in $1 s." }
 }

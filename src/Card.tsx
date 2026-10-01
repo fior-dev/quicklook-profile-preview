@@ -6,6 +6,7 @@ import css from "./style.css?inline";
 export type CardState =
   | { kind: "loading" }
   | { kind: "ready"; person: Partial<PersonSummary> }
+  | { kind: "limited"; mode: "wait" | "backoff"; retryAt: number }
   | { kind: "error" };
 
 const GAP = 6;
@@ -19,6 +20,13 @@ const View = ({ state, onClose }: { state: CardState; onClose: () => void }) => 
     </button>
     {state.kind === "loading" && <p>{t("cardLoading")}</p>}
     {state.kind === "error" && <p>{t("cardError")}</p>}
+    {state.kind === "limited" && (
+      <p>
+        {state.mode === "wait"
+          ? t("cardWait")
+          : t("cardBackoff", String(Math.max(1, Math.ceil((state.retryAt - Date.now()) / 1000))))}
+      </p>
+    )}
     {state.kind === "ready" && (
       <>
         <p class="font-semibold">{state.person.name}</p>

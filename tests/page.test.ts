@@ -1,9 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { readFileSync } from "node:fs";
 import fixture from "./fixtures/voyager-person.json";
 import { start } from "../src/content";
-
-const messages = JSON.parse(readFileSync("_locales/en/messages.json", "utf8"));
+import { fakeChrome, memoryStorage, messages } from "./helpers";
 
 const host = () => document.getElementById("quicklook-host")!;
 const cardText = () => host().shadowRoot!.textContent ?? "";
@@ -20,7 +18,7 @@ describe("página com Gatilhos de Pessoa", () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.stubGlobal("chrome", { i18n: { getMessage: (k: string) => messages[k]?.message ?? "" } });
+    vi.stubGlobal("chrome", fakeChrome());
     document.cookie = 'JSESSIONID="ajax:123"';
     document.body.innerHTML = `
       <a id="g" href="https://www.linkedin.com/in/ana-exemplo/">Ana</a>
@@ -33,7 +31,7 @@ describe("página com Gatilhos de Pessoa", () => {
         ? new Response(JSON.stringify({ included: [{ publicIdentifier: "eu-mesmo" }] }))
         : new Response(JSON.stringify(fixture)),
     );
-    start(document, { fetch: fetchMock as unknown as typeof fetch });
+    start(document, { fetch: fetchMock as unknown as typeof fetch, storage: memoryStorage() });
   });
 
   afterEach(() => {
