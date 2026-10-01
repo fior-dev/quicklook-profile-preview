@@ -1,0 +1,6 @@
+{
+  "extName": { "message": "QuickLook - Profile Preview" },
+  "extDescription": { "message": "See a LinkedIn person's summary on hover, without leaving the page." },
+  "cardLoading": { "message": "Loading…" },
+  "cardError": { "message": "This profile could not be loaded." }
+}

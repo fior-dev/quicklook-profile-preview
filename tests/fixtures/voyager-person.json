@@ -1,0 +1,13 @@
+{
+  "_aviso": "SINTÉTICA: formato inferido da pesquisa sobre a referência, não gravada do LinkedIn ao vivo. Substituir por resposta real anonimizada (ticket #2, pendência 5).",
+  "data": { "*elements": ["urn:li:fsd_profile:ACoAAAexample"] },
+  "included": [
+    {
+      "entityUrn": "urn:li:fsd_profile:ACoAAAexample",
+      "publicIdentifier": "ana-exemplo",
+      "firstName": "Ana",
+      "lastName": "Exemplo",
+      "headline": "Engenheira de Software na Empresa Fictícia"
+    }
+  ]
+}
