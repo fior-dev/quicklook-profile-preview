@@ -31,11 +31,11 @@ Tudo pelo agente: `git init` foi feito pelo José; o agente criou `reference/`, 
 
 ## Aberto
 
-1. Seams de teste propostos no spec ainda não confirmados pelo José.
-2. Skills `to-tickets`/`implement`/`teach` não instaladas.
-3. Sem remoto no GitHub: o push desta sessão não foi possível.
-4. Arquivos fora de `docs/` ainda não commitados (exige ordem).
-5. Interpretei "30% de janela de contexto" como 30% usados; confirmar.
+1. Quebrar o spec em tickets com `/to-tickets`, ainda no Opus; depois trocar para Sonnet.
+2. `LICENSE` MIT ainda não adicionada ao repositório.
+3. Arquivos fora de `docs/` ficam sem commit, por decisão do José.
+
+Resolvido no fim da sessão: seams confirmados; as skills de fluxo estão instaladas (eu errei ao dizer que não estavam, olhei só a lista da sessão); "30%" é 30% da janela usados; criei o repositório público `fior-dev/quicklook-profile-preview` via MCP do GitHub e empurrei `main`.
 
 Os itens também estão em `docs/PENDENCIAS.md`.
 
