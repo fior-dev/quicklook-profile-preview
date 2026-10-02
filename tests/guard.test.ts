@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { start } from "../src/content";
-import { fakeChrome, fixtures, linkedinFetch, memoryStorage } from "./helpers";
+import { fakeChrome, fakeSync, fixtures, linkedinFetch, memoryStorage } from "./helpers";
 
 const HOUR = 60 * 60_000;
 const cardText = () => document.getElementById("quicklook-host")!.shadowRoot!.textContent ?? "";
@@ -30,7 +30,7 @@ describe("Guardião de requisições, visto pela página", () => {
     document.body.innerHTML = Array.from({ length: 25 }, (_, i) => `<a id="p${i}" href="/in/pessoa-${i}/">P${i}</a>`).join("");
     fetchMock = linkedinFetch({ profile: () => new Response(fixtures.profile, { status }) });
     storage = memoryStorage();
-    start(document, { fetch: fetchMock as unknown as typeof fetch, storage });
+    start(document, { fetch: fetchMock as unknown as typeof fetch, storage, settings: fakeSync() });
   });
 
   afterEach(() => {

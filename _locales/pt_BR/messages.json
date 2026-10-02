@@ -46,5 +46,32 @@
   },
   "cardLess": {
     "message": "ver menos"
+  },
+  "popupTitle": {
+    "message": "QuickLook"
+  },
+  "popupEnabled": {
+    "message": "Ativar a extensão"
+  },
+  "popupLanguage": {
+    "message": "Idioma"
+  },
+  "popupLangAuto": {
+    "message": "Automático (navegador)"
+  },
+  "popupDelay": {
+    "message": "Atraso do hover"
+  },
+  "popupClearCache": {
+    "message": "Limpar cache"
+  },
+  "popupCleared": {
+    "message": "Cache limpo"
+  },
+  "popupPrivacy": {
+    "message": "Política de privacidade"
+  },
+  "popupGithub": {
+    "message": "GitHub"
   }
 }

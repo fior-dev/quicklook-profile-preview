@@ -46,5 +46,32 @@
   },
   "cardLess": {
     "message": "see less"
+  },
+  "popupTitle": {
+    "message": "QuickLook"
+  },
+  "popupEnabled": {
+    "message": "Enable the extension"
+  },
+  "popupLanguage": {
+    "message": "Language"
+  },
+  "popupLangAuto": {
+    "message": "Automatic (browser)"
+  },
+  "popupDelay": {
+    "message": "Hover delay"
+  },
+  "popupClearCache": {
+    "message": "Clear cache"
+  },
+  "popupCleared": {
+    "message": "Cache cleared"
+  },
+  "popupPrivacy": {
+    "message": "Privacy policy"
+  },
+  "popupGithub": {
+    "message": "GitHub"
   }
 }

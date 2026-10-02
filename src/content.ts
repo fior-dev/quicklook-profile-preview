@@ -1,8 +1,9 @@
 import { createCard, type CardState, type Placeholder } from "./Card";
 import { createGuard, type Store } from "./guard";
+import { setLang } from "./i18n";
+import { DEFAULTS, watchSettings, type SettingsSource } from "./settings";
 import { fetchOwnSlug, fetchPersonSummary } from "./source";
 
-const HOVER_MS = 400;
 const CLOSE_MS = 300;
 
 // Só caminho /in/<slug> em www.linkedin.com. Links promocionais ("/premium/...") caem fora por URL;
@@ -30,13 +31,14 @@ const placeholderOf = (a: HTMLAnchorElement): Placeholder => {
 
 const triggerOf = (n: EventTarget | null) => (n as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
 
-export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store }) {
+export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store; settings: SettingsSource }) {
   const guard = createGuard(deps.storage, (slug) => fetchPersonSummary(slug, { fetch: deps.fetch, cookie: doc.cookie }));
   let open: ReturnType<typeof setTimeout> | undefined;
   let close: ReturnType<typeof setTimeout> | undefined;
   let current = 0; // invalida buscas em andamento quando o Card fecha ou troca de alvo
   let shown: HTMLAnchorElement | null = null;
   let ownSlug: Promise<string | null> | undefined;
+  let settings = DEFAULTS;
 
   const hide = () => {
     clearTimeout(open);
@@ -53,6 +55,12 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   const card = createCard(doc, hide);
   const cookie = () => doc.cookie;
 
+  watchSettings(deps.settings, (s) => {
+    settings = s;
+    setLang(s.lang);
+    if (!s.enabled) hide();
+  });
+
   card.host.addEventListener("mouseover", () => clearTimeout(close));
   card.host.addEventListener("mouseout", scheduleClose);
   doc.addEventListener("keydown", (e) => e.key === "Escape" && hide());
@@ -62,7 +70,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   const alive = () => !!chrome.runtime?.id || (card.host.remove(), false);
 
   doc.addEventListener("mouseover", (e) => {
-    if (!alive()) return;
+    if (!alive() || !settings.enabled) return;
     const a = triggerOf(e.target);
     const slug = a && personSlug(a);
     if (!a || !slug) return;
@@ -70,7 +78,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
     if (a === shown) return;
     clearTimeout(open);
     open = setTimeout(async () => {
-      if (!alive()) return;
+      if (!alive() || !settings.enabled) return;
       ownSlug ??= fetchOwnSlug({ fetch: deps.fetch, cookie: cookie() });
       const id = ++current;
       if (slug === (await ownSlug)) return;
@@ -92,7 +100,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
       }
       if (id !== current || !alive()) return;
       card.show(state, rect);
-    }, HOVER_MS);
+    }, settings.delay);
   });
 
   doc.addEventListener("mouseout", (e) => {
@@ -105,4 +113,4 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
 }
 
 // ponytail: o teste importa `start` direto; só a extensão real (chrome.runtime.id) dispara sozinha.
-if (typeof chrome !== "undefined" && chrome.runtime?.id) start(document, { fetch: window.fetch.bind(window), storage: chrome.storage.session });
+if (typeof chrome !== "undefined" && chrome.runtime?.id) start(document, { fetch: window.fetch.bind(window), storage: chrome.storage.session, settings: chrome.storage.sync });
