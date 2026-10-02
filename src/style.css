@@ -1,3 +1,4 @@
+@layer theme, base, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
 
@@ -10,4 +11,10 @@
   --tw-inset-ring-shadow: 0 0 #0000;
   --tw-ring-shadow: 0 0 #0000;
   --tw-ring-offset-shadow: 0 0 #0000;
+}
+
+/* Sem o preflight do Tailwind: zera só o que o navegador estiliza por padrão, numa camada abaixo das utilities. */
+@layer base {
+  p { margin: 0; }
+  button { border: 0; background: none; padding: 0; font: inherit; color: inherit; cursor: pointer; }
 }
