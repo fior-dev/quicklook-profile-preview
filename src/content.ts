@@ -1,4 +1,4 @@
-import { createCard, type CardState } from "./Card";
+import { createCard, type CardState, type Placeholder } from "./Card";
 import { createGuard, type Store } from "./guard";
 import { fetchOwnSlug, fetchPersonSummary } from "./source";
 
@@ -20,6 +20,13 @@ export function personSlug(a: HTMLAnchorElement): string | null {
     return raw;
   }
 }
+
+// Nome e foto que a página já mostra, para o Card não parecer vazio enquanto carrega.
+const placeholderOf = (a: HTMLAnchorElement): Placeholder => {
+  const name = a.textContent?.replace(/\s+/g, " ").trim().slice(0, 80);
+  const img = (a.closest("li, [data-view-name]") ?? a).querySelector<HTMLImageElement>('img[src*="licdn"], img[src*="media.li"]');
+  return { name: name || undefined, photo: img?.src.startsWith("https://") ? img.src : undefined };
+};
 
 const triggerOf = (n: EventTarget | null) => (n as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
 
@@ -64,16 +71,16 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
       if (id !== current) return;
       shown = a;
       const rect = a.getBoundingClientRect();
-      card.show({ kind: "loading" }, rect);
+      card.show({ kind: "loading", placeholder: placeholderOf(a) }, rect);
       let state: CardState;
       try {
         const r = await guard.person(slug, doc.documentElement.lang);
         state =
           "limited" in r
             ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
-            : r.failed.length === 2
-              ? { kind: "error" }
-              : { kind: "ready", person: r.person };
+            : r.person.name
+              ? { kind: "ready", person: r.person, failed: r.failed, lang: doc.documentElement.lang }
+              : { kind: "error" };
       } catch {
         state = { kind: "error" };
       }

@@ -1,9 +1,44 @@
 {
-  "extName": { "message": "QuickLook - Profile Preview" },
-  "extDescription": { "message": "Veja o resumo de uma pessoa do LinkedIn ao passar o mouse, sem sair da página." },
-  "cardLoading": { "message": "Carregando…" },
-  "cardError": { "message": "Não foi possível carregar este perfil." },
-  "cardClose": { "message": "Fechar" },
-  "cardWait": { "message": "Muitas buscas seguidas. Aguarde alguns segundos." },
-  "cardBackoff": { "message": "O LinkedIn está limitando as requisições. Tente de novo em $1 s." }
+  "extName": {
+    "message": "QuickLook - Profile Preview"
+  },
+  "extDescription": {
+    "message": "Veja o resumo de uma pessoa do LinkedIn ao passar o mouse, sem sair da página."
+  },
+  "cardLoading": {
+    "message": "Carregando…"
+  },
+  "cardError": {
+    "message": "Não foi possível carregar este perfil."
+  },
+  "cardClose": {
+    "message": "Fechar"
+  },
+  "cardWait": {
+    "message": "Muitas buscas seguidas. Aguarde alguns segundos."
+  },
+  "cardBackoff": {
+    "message": "O LinkedIn está limitando as requisições. Tente de novo em $1 s."
+  },
+  "cardPartial": {
+    "message": "Algumas informações não puderam ser carregadas."
+  },
+  "cardReport": {
+    "message": "Reportar problema"
+  },
+  "cardSince": {
+    "message": "desde $1"
+  },
+  "cardDegree1": {
+    "message": "1º · conectados"
+  },
+  "cardDegree2": {
+    "message": "2º grau"
+  },
+  "cardDegree3": {
+    "message": "3º grau ou mais"
+  },
+  "cardAvatarAlt": {
+    "message": "Foto de perfil"
+  }
 }
