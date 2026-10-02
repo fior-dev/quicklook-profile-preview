@@ -29,12 +29,6 @@ class RateLimited extends Error {}
 
 const PRONOUNS: Record<string, string> = { HE_HIM: "he/him", SHE_HER: "she/her", THEY_THEM: "they/them" };
 
-const cut = (s: string, max = 200) => {
-  if (s.length <= max) return s;
-  const head = s.slice(0, max);
-  return head.slice(0, head.lastIndexOf(" ") > max / 2 ? head.lastIndexOf(" ") : max) + "…";
-};
-
 const photoFrom = (pic: any): string | undefined => {
   const v = pic?.displayImage?.vectorImage;
   const art = v?.artifacts?.find((a: any) => a.width === 200) ?? v?.artifacts?.[0];
@@ -121,7 +115,7 @@ export async function fetchPersonSummary(slug: string, deps: SourceDeps): Promis
     else failed.push("headline");
     const pronoun = profile.pronounUnion?.standardizedPronoun;
     if (pronoun) person.pronouns = PRONOUNS[pronoun] ?? pronoun.toLowerCase().replace("_", "/");
-    if (profile.summary) person.about = cut(profile.summary);
+    if (profile.summary) person.about = profile.summary;
     const photo = photoFrom(profile.profilePicture);
     if (photo) person.photo = photo;
     const location = profile.address || profile.locationName;

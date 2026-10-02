@@ -1,4 +1,5 @@
 import { render } from "preact";
+import { useState } from "preact/hooks";
 import { t } from "./i18n";
 import type { Field, PersonSummary } from "./source";
 import css from "./style.css?inline";
@@ -13,6 +14,7 @@ export type CardState =
 const GAP = 6;
 const MARGIN = 8;
 const WIDTH = 280;
+const ABOUT_PREVIEW = 200;
 const REPO = "https://github.com/fior-dev/quicklook-profile-preview";
 
 // Só versão e nomes dos campos que falharam: nada do perfil visto.
@@ -22,12 +24,33 @@ const reportUrl = (failed: Field[]) => {
   return `${REPO}/issues/new?title=${encodeURIComponent("Card incompleto")}&body=${encodeURIComponent(body)}`;
 };
 
+// Corta no último espaço antes do limite; o Usuário expande para ler tudo.
+const About = ({ text }: { text: string }) => {
+  const [open, setOpen] = useState(false);
+  const long = text.length > ABOUT_PREVIEW;
+  const head = text.slice(0, ABOUT_PREVIEW);
+  const shown = !long || open ? text : head.slice(0, head.lastIndexOf(" ") > ABOUT_PREVIEW / 2 ? head.lastIndexOf(" ") : ABOUT_PREVIEW) + "…";
+  return (
+    <p class="mt-1 whitespace-pre-line text-gray-700">
+      {shown}
+      {long && (
+        <>
+          {" "}
+          <button type="button" class="text-blue-700 underline" onClick={() => setOpen(!open)}>
+            {t(open ? "cardLess" : "cardMore")}
+          </button>
+        </>
+      )}
+    </p>
+  );
+};
+
 const Avatar = ({ src }: { src?: string }) =>
   src ? <img src={src} alt={t("cardAvatarAlt")} class="h-12 w-12 shrink-0 rounded-full object-cover" /> : null;
 
 const View = ({ state, onClose }: { state: CardState; onClose: () => void }) => (
   <div class="relative rounded-lg border border-gray-300 bg-white p-3 pr-8 text-sm text-gray-900 shadow-lg">
-    <button type="button" class="absolute top-1 right-2 text-gray-500" aria-label={t("cardClose")} onClick={onClose}>
+    <button type="button" class="absolute top-1 right-2 text-lg leading-none text-gray-500" aria-label={t("cardClose")} onClick={onClose}>
       ×
     </button>
     {state.kind === "loading" && (
@@ -73,7 +96,7 @@ const Summary = ({ person: p, failed, lang }: { person: Partial<PersonSummary>; 
         </p>
       )}
       {p.location && <p class="text-gray-500">{p.location}</p>}
-      {p.about && <p class="mt-1 text-gray-700">{p.about}</p>}
+      {p.about && <About text={p.about} />}
       {failed.length > 0 && (
         <p class="mt-2 text-xs text-gray-500">
           {t("cardPartial")}{" "}

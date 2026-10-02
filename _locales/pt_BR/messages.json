@@ -40,5 +40,11 @@
   },
   "cardAvatarAlt": {
     "message": "Foto de perfil"
+  },
+  "cardMore": {
+    "message": "ver mais"
+  },
+  "cardLess": {
+    "message": "ver menos"
   }
 }
