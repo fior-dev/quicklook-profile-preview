@@ -1,5 +1,6 @@
 import { render } from "preact";
 import { useState } from "preact/hooks";
+import { fileName, formatSince, messageUrl, personMarkdown, profileUrl } from "./export";
 import { t } from "./i18n";
 import type { Field, PersonSummary } from "./source";
 import css from "./style.css?inline";
@@ -89,8 +90,50 @@ const View = ({ state, theme, onClose }: { state: CardState; theme: string; onCl
   </div>
 );
 
+const BTN = "rounded border border-gray-300 px-2 py-1 text-xs dark:border-gray-600";
+
+// Copiar e salvar usam a Exportação do que já foi carregado; mensagem e perfil só abrem páginas do LinkedIn.
+const Actions = ({ person: p, lang }: { person: Partial<PersonSummary>; lang: string }) => {
+  const [done, setDone] = useState<"copied" | "saved" | "failed">();
+  const copy = () =>
+    navigator.clipboard.writeText(personMarkdown(p, lang)).then(
+      () => setDone("copied"),
+      () => setDone("failed"),
+    );
+  const save = () => {
+    const url = URL.createObjectURL(new Blob([personMarkdown(p, lang)], { type: "text/markdown" }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: fileName(p.slug ?? "perfil") });
+    a.click();
+    URL.revokeObjectURL(url);
+    setDone("saved");
+  };
+  return (
+    <div role="group" aria-label={t("actionsLabel")} class="mt-2 flex flex-wrap items-center gap-1">
+      {p.urn && (
+        <a class={BTN} href={messageUrl(p.urn)} target="_blank" rel="noopener noreferrer">
+          {t("actionMessage")}
+        </a>
+      )}
+      {p.slug && (
+        <a class={BTN} href={profileUrl(p.slug)} target="_blank" rel="noopener noreferrer">
+          {t("actionProfile")}
+        </a>
+      )}
+      <button type="button" class={BTN} onClick={copy}>
+        {t("actionCopy")}
+      </button>
+      <button type="button" class={BTN} onClick={save}>
+        {t("actionSave")}
+      </button>
+      <span role="status" class="text-xs text-gray-500 dark:text-gray-400">
+        {done && t(done === "copied" ? "actionCopied" : done === "saved" ? "actionSaved" : "actionFailed")}
+      </span>
+    </div>
+  );
+};
+
 const Summary = ({ person: p, failed, lang }: { person: Partial<PersonSummary>; failed: Field[]; lang: string }) => {
-  const since = p.since && new Intl.DateTimeFormat(lang || undefined, { month: "short", year: "numeric" }).format(new Date(p.since.year, p.since.month - 1));
+  const since = p.since && formatSince(p.since, lang);
   return (
     <>
       <div class="flex gap-2">
@@ -112,6 +155,7 @@ const Summary = ({ person: p, failed, lang }: { person: Partial<PersonSummary>; 
       )}
       {p.location && <p class="text-gray-500 dark:text-gray-400">{p.location}</p>}
       {p.about && <About text={p.about} />}
+      <Actions person={p} lang={lang} />
       {failed.length > 0 && (
         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
           {t("cardPartial")}{" "}

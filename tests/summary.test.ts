@@ -74,7 +74,7 @@ describe("Resumo da Pessoa, visto pela página", () => {
     await open({ positions: () => new Response("erro", { status: 500 }) });
     expect(text()).toContain("Pedro Exemplo");
     expect(text()).toContain(messages.cardPartial.message);
-    const link = root().querySelector<HTMLAnchorElement>("a")!;
+    const link = root().querySelector<HTMLAnchorElement>('a[href^="https://github.com"]')!;
     const url = new URL(link.href);
     expect(url.origin + url.pathname).toBe("https://github.com/fior-dev/quicklook-profile-preview/issues/new");
     const body = url.searchParams.get("body")!;
