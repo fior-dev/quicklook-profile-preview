@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import fixture from "./fixtures/voyager-person.json";
 import { start } from "../src/content";
-import { fakeChrome, memoryStorage, messages } from "./helpers";
+import { fakeChrome, linkedinFetch, memoryStorage, messages } from "./helpers";
 
 const host = () => document.getElementById("quicklook-host")!;
 const cardText = () => host().shadowRoot!.textContent ?? "";
@@ -26,11 +25,7 @@ describe("página com Gatilhos de Pessoa", () => {
       <a id="outro" href="/in/caio-exemplo">Caio</a>
       <a id="eu" href="/in/eu-mesmo/">Eu</a>
       <a id="promo" href="/premium/products/?utm=x">Experimente o Premium</a>`;
-    fetchMock = vi.fn(async (url: string) =>
-      url.startsWith("/voyager/api/me")
-        ? new Response(JSON.stringify({ included: [{ publicIdentifier: "eu-mesmo" }] }))
-        : new Response(JSON.stringify(fixture)),
-    );
+    fetchMock = linkedinFetch();
     start(document, { fetch: fetchMock as unknown as typeof fetch, storage: memoryStorage() });
   });
 
@@ -47,8 +42,8 @@ describe("página com Gatilhos de Pessoa", () => {
 
   it("hover de 400 ms abre o Card com nome e headline", async () => {
     await openOn(document.getElementById("g")!);
-    expect(cardText()).toContain("Ana Exemplo");
-    expect(cardText()).toContain("Engenheira de Software na Empresa Fictícia");
+    expect(cardText()).toContain("Pedro Exemplo");
+    expect(cardText()).toContain("Engenheiro de Pesquisa @ Empresa Fictícia Labs");
     const [url, init] = profileCalls()[0];
     expect(url).toContain("memberIdentity=ana-exemplo");
     expect(init.headers["csrf-token"]).toBe("ajax:123");
@@ -66,7 +61,7 @@ describe("página com Gatilhos de Pessoa", () => {
   });
 
   it("resposta inesperada mostra a mensagem de erro", async () => {
-    fetchMock.mockResolvedValue(new Response("{}"));
+    fetchMock.mockImplementation(async () => new Response("{}"));
     await openOn(document.getElementById("g")!);
     expect(cardText()).toContain(messages.cardError.message);
   });
