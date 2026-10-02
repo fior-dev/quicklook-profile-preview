@@ -57,7 +57,12 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   card.host.addEventListener("mouseout", scheduleClose);
   doc.addEventListener("keydown", (e) => e.key === "Escape" && hide());
 
+  // Depois de recarregar a extensão, a aba mantém o script antigo com o contexto invalidado (chrome.* lança).
+  // Ele se retira em silêncio; só um F5 na aba traz o script novo.
+  const alive = () => !!chrome.runtime?.id || (card.host.remove(), false);
+
   doc.addEventListener("mouseover", (e) => {
+    if (!alive()) return;
     const a = triggerOf(e.target);
     const slug = a && personSlug(a);
     if (!a || !slug) return;
@@ -65,6 +70,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
     if (a === shown) return;
     clearTimeout(open);
     open = setTimeout(async () => {
+      if (!alive()) return;
       ownSlug ??= fetchOwnSlug({ fetch: deps.fetch, cookie: cookie() });
       const id = ++current;
       if (slug === (await ownSlug)) return;
@@ -84,7 +90,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
       } catch {
         state = { kind: "error" };
       }
-      if (id !== current) return;
+      if (id !== current || !alive()) return;
       card.show(state, rect);
     }, HOVER_MS);
   });

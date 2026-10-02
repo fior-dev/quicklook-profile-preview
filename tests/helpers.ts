@@ -10,7 +10,7 @@ export const fakeChrome = () => ({
     getMessage: (k: string, subs: string[] = []) =>
       (messages[k]?.message ?? "").replace(/\$(\d)/g, (_: string, i: string) => subs[Number(i) - 1] ?? ""),
   },
-  runtime: { getManifest: () => ({ version: "9.9.9" }) },
+  runtime: { id: "test-extension", getManifest: () => ({ version: "9.9.9" }) },
 });
 
 export const memoryStorage = (): Store => {

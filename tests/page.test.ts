@@ -137,6 +137,13 @@ describe("página com Gatilhos de Pessoa", () => {
     expect(profileCalls()[0][0]).not.toContain("%2F");
   });
 
+  it("com a extensão recarregada (contexto invalidado) o script antigo se retira sem lançar erro", async () => {
+    (chrome.runtime as { id?: string }).id = undefined;
+    await openOn(document.getElementById("g")!);
+    expect(document.getElementById("quicklook-host")).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it("Gatilho inserido depois do carregamento funciona", async () => {
     document.body.insertAdjacentHTML("beforeend", '<a id="novo" href="/in/dani-exemplo/">Dani</a>');
     await openOn(document.getElementById("novo")!);
