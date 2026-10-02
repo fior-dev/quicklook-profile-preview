@@ -39,3 +39,17 @@ export const linkedinFetch = (overrides: Partial<Record<keyof typeof fixtures | 
     if (url.includes("/details/experience/")) return pick("experience", fixtures.experience);
     return pick("topcard", fixtures.topcard);
   });
+
+// chrome.storage.sync falso: `set` dispara onChanged como o navegador faz nas outras abas.
+export const fakeSync = (initial: Record<string, unknown> = {}) => {
+  const data: Record<string, unknown> = { ...initial };
+  const listeners: ((c: Record<string, { newValue?: unknown }>) => void)[] = [];
+  return {
+    get: async (keys: string[]) => Object.fromEntries(keys.filter((k) => k in data).map((k) => [k, data[k]])),
+    set: async (items: Record<string, unknown>) => {
+      Object.assign(data, items);
+      listeners.forEach((l) => l(Object.fromEntries(Object.entries(items).map(([k, v]) => [k, { newValue: v }]))));
+    },
+    onChanged: { addListener: (cb: (c: Record<string, { newValue?: unknown }>) => void) => void listeners.push(cb) },
+  };
+};

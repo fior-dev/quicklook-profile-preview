@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { start } from "../src/content";
-import { fakeChrome, linkedinFetch, memoryStorage, messages } from "./helpers";
+import { fakeChrome, fakeSync, linkedinFetch, memoryStorage, messages } from "./helpers";
 
 const host = () => document.getElementById("quicklook-host")!;
 const cardText = () => host().shadowRoot!.textContent ?? "";
@@ -26,7 +26,7 @@ describe("página com Gatilhos de Pessoa", () => {
       <a id="eu" href="/in/eu-mesmo/">Eu</a>
       <a id="promo" href="/premium/products/?utm=x">Experimente o Premium</a>`;
     fetchMock = linkedinFetch();
-    start(document, { fetch: fetchMock as unknown as typeof fetch, storage: memoryStorage() });
+    start(document, { fetch: fetchMock as unknown as typeof fetch, storage: memoryStorage(), settings: fakeSync() });
   });
 
   afterEach(() => {
