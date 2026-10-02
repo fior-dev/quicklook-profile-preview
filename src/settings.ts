@@ -5,6 +5,7 @@ export const DELAYS = [200, 400, 700, 1000];
 // O que o código usa de chrome.storage.sync; o teste passa um falso.
 export type SettingsSource = {
   get(keys: string[]): Promise<Record<string, any>>;
+  set(items: Record<string, unknown>): Promise<void>;
   onChanged: { addListener(cb: (changes: Record<string, { newValue?: unknown }>) => void): void };
 };
 

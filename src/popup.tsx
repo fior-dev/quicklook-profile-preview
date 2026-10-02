@@ -1,6 +1,7 @@
 import { render } from "preact";
 import { useEffect, useState } from "preact/hooks";
 import { setLang, t } from "./i18n";
+import { INTEREST_URL } from "./interest";
 import { DELAYS, loadSettings, DEFAULTS, type Settings, type SettingsSource } from "./settings";
 
 const REPO = "https://github.com/fior-dev/quicklook-profile-preview";
@@ -12,7 +13,7 @@ type Session = { get(keys: null): Promise<Record<string, unknown>>; remove(keys:
 export const clearCache = async (session: Session) =>
   session.remove(Object.keys(await session.get(null)).filter((k) => k.startsWith("cache:")));
 
-export function Popup({ sync, session }: { sync: SettingsSource & { set(items: Partial<Settings>): Promise<void> }; session: Session }) {
+export function Popup({ sync, session }: { sync: SettingsSource; session: Session }) {
   const [s, setS] = useState<Settings>(DEFAULTS);
   const [cleared, setCleared] = useState(false);
   useEffect(() => void loadSettings(sync).then(setS), []);
@@ -53,6 +54,9 @@ export function Popup({ sync, session }: { sync: SettingsSource & { set(items: P
           {t("popupClearCache")}
         </button>
         {cleared && <span class="ok" role="status">{t("popupCleared")}</span>}
+      </div>
+      <div class="row">
+        <a href={INTEREST_URL} target="_blank" rel="noopener noreferrer">{t("popupInterest")}</a>
       </div>
       <footer>
         <a href={PRIVACY} target="_blank" rel="noopener noreferrer">{t("popupPrivacy")}</a>
