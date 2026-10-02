@@ -89,7 +89,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
         "limited" in r
           ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
           : r.person.name
-            ? { kind: "ready", person: r.person, failed: r.failed, lang: doc.documentElement.lang }
+            ? { kind: "ready", person: { slug, ...r.person }, failed: r.failed, lang: doc.documentElement.lang }
             : { kind: "error" };
     } catch {
       state = { kind: "error" };
