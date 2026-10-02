@@ -76,5 +76,44 @@
   },
   "cardLabel": {
     "message": "Resumo do perfil"
+  },
+  "actionMessage": {
+    "message": "Enviar mensagem"
+  },
+  "actionProfile": {
+    "message": "Abrir perfil"
+  },
+  "actionCopy": {
+    "message": "Copiar"
+  },
+  "actionSave": {
+    "message": "Salvar .md"
+  },
+  "actionCopied": {
+    "message": "Copiado"
+  },
+  "actionSaved": {
+    "message": "Salvo"
+  },
+  "actionFailed": {
+    "message": "Não foi possível copiar"
+  },
+  "actionsLabel": {
+    "message": "Ações"
+  },
+  "exportPosition": {
+    "message": "Cargo"
+  },
+  "exportLocation": {
+    "message": "Localização"
+  },
+  "exportConnection": {
+    "message": "Conexão"
+  },
+  "exportProfile": {
+    "message": "Perfil"
+  },
+  "exportAbout": {
+    "message": "Sobre"
   }
 }

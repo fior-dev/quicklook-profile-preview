@@ -1,4 +1,6 @@
 export type PersonSummary = {
+  slug: string;
+  urn: string;
   name: string;
   pronouns: string;
   headline: string;
@@ -111,6 +113,8 @@ export async function fetchPersonSummary(slug: string, deps: SourceDeps): Promis
     if (!name) return { person: {}, failed: ["name", "headline"] };
 
     person.name = name;
+    person.slug = slug;
+    if (typeof profile.entityUrn === "string") person.urn = profile.entityUrn;
     if (profile.headline) person.headline = profile.headline;
     else failed.push("headline");
     const pronoun = profile.pronounUnion?.standardizedPronoun;
