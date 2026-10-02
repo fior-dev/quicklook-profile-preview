@@ -1,6 +1,7 @@
 import { createCard, type CardState, type Placeholder } from "./Card";
 import { createGuard, type Store } from "./guard";
 import { setLang } from "./i18n";
+import { showInterestNotice } from "./notice";
 import { DEFAULTS, watchSettings, type SettingsSource } from "./settings";
 import { fetchOwnSlug, fetchPersonSummary } from "./source";
 
@@ -57,6 +58,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   const card = createCard(doc, hide);
   const cookie = () => doc.cookie;
 
+  showInterestNotice(doc, deps.settings);
   watchSettings(deps.settings, (s) => {
     settings = s;
     setLang(s.lang);
