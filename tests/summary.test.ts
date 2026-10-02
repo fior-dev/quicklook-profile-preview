@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { start } from "../src/content";
-import { fakeChrome, linkedinFetch, memoryStorage, messages } from "./helpers";
+import { fakeChrome, fixtures, linkedinFetch, memoryStorage, messages } from "./helpers";
 
 const host = () => document.getElementById("quicklook-host")!;
 const root = () => host().shadowRoot!;
@@ -39,8 +39,19 @@ describe("Resumo da Pessoa, visto pela página", () => {
     expect(text()).toContain(messages.cardDegree2.message);
     expect(text()).toContain("Pessoa fictícia usada nos testes");
     expect(text()).toContain("…");
+    expect(text()).toContain(messages.cardMore.message);
     expect(text()).not.toContain(messages.cardPartial.message);
     expect(root().querySelector("img")!.getAttribute("src")).toMatch(/^https:\/\/media\.example\.com\/.*200_200/);
+  });
+
+  it("o Sobre vem cortado e o Usuário expande para ler tudo", async () => {
+    await open();
+    const full = JSON.parse(fixtures.profile).included[0].summary as string;
+    expect(text()).not.toContain(full);
+    root().querySelector<HTMLButtonElement>("p button")!.click();
+    await wait(0);
+    expect(text()).toContain(full);
+    expect(text()).toContain(messages.cardLess.message);
   });
 
   it("mostra nome e foto da página enquanto a resposta não chega", async () => {
