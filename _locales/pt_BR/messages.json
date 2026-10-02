@@ -115,5 +115,17 @@
   },
   "exportAbout": {
     "message": "Sobre"
+  },
+  "popupInterest": {
+    "message": "Quero no Sales Navigator / Recruiter"
+  },
+  "noticeText": {
+    "message": "O QuickLook ainda não funciona no Sales Navigator / Recruiter. Quer que funcione?"
+  },
+  "noticeAction": {
+    "message": "Quero que funcione"
+  },
+  "noticeClose": {
+    "message": "Dispensar aviso"
   }
 }

@@ -3,6 +3,7 @@ import { render } from "preact";
 import { act } from "preact/test-utils";
 import { clearCache, Popup } from "../src/popup";
 import { setLang } from "../src/i18n";
+import { INTEREST_URL } from "../src/interest";
 import { fakeChrome, fakeSync, messages } from "./helpers";
 import pt from "../_locales/pt_BR/messages.json";
 
@@ -82,15 +83,16 @@ describe("popup", () => {
     expect(session.remove).toHaveBeenCalledWith([]);
   });
 
-  it("links de privacidade e GitHub abrem em nova aba", async () => {
+  it("links de interesse, privacidade e GitHub abrem em nova aba", async () => {
     await mount();
     const links = [...root.querySelectorAll("a")];
-    expect(links).toHaveLength(2);
+    expect(links).toHaveLength(3);
     for (const a of links) {
       expect(a.target).toBe("_blank");
       expect(a.rel).toContain("noopener");
     }
-    expect(links[0].href).toMatch(/PRIVACY\.md$/);
-    expect(links[1].href).toBe("https://github.com/fior-dev/quicklook-profile-preview");
+    expect(links[0].href).toBe(INTEREST_URL);
+    expect(links[1].href).toMatch(/PRIVACY\.md$/);
+    expect(links[2].href).toBe("https://github.com/fior-dev/quicklook-profile-preview");
   });
 });
