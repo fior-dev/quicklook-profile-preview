@@ -41,6 +41,8 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   let settings = DEFAULTS;
 
   const hide = () => {
+    // Fechar com o foco dentro do Card devolve o foco ao Gatilho.
+    if (doc.activeElement === card.host) shown?.focus();
     clearTimeout(open);
     clearTimeout(close);
     current++;
@@ -63,11 +65,50 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
 
   card.host.addEventListener("mouseover", () => clearTimeout(close));
   card.host.addEventListener("mouseout", scheduleClose);
-  doc.addEventListener("keydown", (e) => e.key === "Escape" && hide());
 
   // Depois de recarregar a extensão, a aba mantém o script antigo com o contexto invalidado (chrome.* lança).
   // Ele se retira em silêncio; só um F5 na aba traz o script novo.
   const alive = () => !!chrome.runtime?.id || (card.host.remove(), false);
+
+  const openCard = async (a: HTMLAnchorElement, slug: string, focus = false) => {
+    if (!alive() || !settings.enabled) return;
+    ownSlug ??= fetchOwnSlug({ fetch: deps.fetch, cookie: cookie() });
+    const id = ++current;
+    if (slug === (await ownSlug)) return;
+    if (id !== current) return;
+    shown = a;
+    const rect = a.getBoundingClientRect();
+    card.show({ kind: "loading", placeholder: placeholderOf(a) }, rect);
+    if (focus) card.focus();
+    let state: CardState;
+    try {
+      const r = await guard.person(slug, doc.documentElement.lang);
+      state =
+        "limited" in r
+          ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
+          : r.person.name
+            ? { kind: "ready", person: r.person, failed: r.failed, lang: doc.documentElement.lang }
+            : { kind: "error" };
+    } catch {
+      state = { kind: "error" };
+    }
+    if (id !== current || !alive()) return;
+    card.show(state, rect);
+  };
+
+  // Alt+Q com um Gatilho focado abre o Card e leva o foco para ele; Esc fecha e devolve o foco ao Gatilho.
+  doc.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") return hide();
+    if (!e.altKey || e.code !== "KeyQ" || !settings.enabled) return;
+    const a = triggerOf(doc.activeElement);
+    const slug = a && personSlug(a);
+    if (!a || !slug) return;
+    e.preventDefault();
+    clearTimeout(open);
+    clearTimeout(close);
+    if (a === shown) card.focus();
+    else openCard(a, slug, true);
+  });
 
   doc.addEventListener("mouseover", (e) => {
     if (!alive() || !settings.enabled) return;
@@ -77,30 +118,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
     clearTimeout(close);
     if (a === shown) return;
     clearTimeout(open);
-    open = setTimeout(async () => {
-      if (!alive() || !settings.enabled) return;
-      ownSlug ??= fetchOwnSlug({ fetch: deps.fetch, cookie: cookie() });
-      const id = ++current;
-      if (slug === (await ownSlug)) return;
-      if (id !== current) return;
-      shown = a;
-      const rect = a.getBoundingClientRect();
-      card.show({ kind: "loading", placeholder: placeholderOf(a) }, rect);
-      let state: CardState;
-      try {
-        const r = await guard.person(slug, doc.documentElement.lang);
-        state =
-          "limited" in r
-            ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
-            : r.person.name
-              ? { kind: "ready", person: r.person, failed: r.failed, lang: doc.documentElement.lang }
-              : { kind: "error" };
-      } catch {
-        state = { kind: "error" };
-      }
-      if (id !== current || !alive()) return;
-      card.show(state, rect);
-    }, settings.delay);
+    open = setTimeout(() => openCard(a, slug), settings.delay);
   });
 
   doc.addEventListener("mouseout", (e) => {
