@@ -4,14 +4,28 @@
   "description": "__MSG_extDescription__",
   "version": "0.1.0",
   "default_locale": "pt_BR",
-  "permissions": ["storage"],
-  "background": { "service_worker": "src/background.ts", "type": "module" },
-  "host_permissions": ["https://www.linkedin.com/*"],
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  },
+  "host_permissions": [
+    "https://www.linkedin.com/*"
+  ],
   "content_scripts": [
     {
-      "matches": ["https://www.linkedin.com/*"],
-      "js": ["src/content.ts"],
+      "matches": [
+        "https://www.linkedin.com/*"
+      ],
+      "js": [
+        "src/content.ts"
+      ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "action": {
+    "default_popup": "src/popup.html"
+  }
 }

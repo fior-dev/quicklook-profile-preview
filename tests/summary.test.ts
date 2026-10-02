@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { start } from "../src/content";
-import { fakeChrome, fixtures, linkedinFetch, memoryStorage, messages } from "./helpers";
+import { fakeChrome, fakeSync, fixtures, linkedinFetch, memoryStorage, messages } from "./helpers";
 
 const host = () => document.getElementById("quicklook-host")!;
 const root = () => host().shadowRoot!;
@@ -11,7 +11,7 @@ describe("Resumo da Pessoa, visto pela página", () => {
   let fetchMock: ReturnType<typeof linkedinFetch>;
   const open = async (overrides: Parameters<typeof linkedinFetch>[0] = {}) => {
     fetchMock = linkedinFetch(overrides);
-    start(document, { fetch: fetchMock as unknown as typeof fetch, storage: memoryStorage() });
+    start(document, { fetch: fetchMock as unknown as typeof fetch, storage: memoryStorage(), settings: fakeSync() });
     document.getElementById("g")!.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
     await wait(400);
   };
