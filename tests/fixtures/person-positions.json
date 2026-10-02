@@ -1,0 +1,76 @@
+{
+  "data": {
+    "*elements": [
+      "urn:li:fsd_profilePositionGroup:(ACoAAAexample0000000000000000000000000000000,grupo0)",
+      "urn:li:fsd_profilePositionGroup:(ACoAAAexample0000000000000000000000000000000,grupo1)",
+      "urn:li:fsd_profilePositionGroup:(ACoAAAexample0000000000000000000000000000000,grupo2)"
+    ],
+    "$type": "com.linkedin.restli.common.CollectionResponse"
+  },
+  "included": [
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:(ACoAAAexample0000000000000000000000000000000,grupo0)",
+      "dateRange": {
+        "start": {
+          "month": 3,
+          "year": 2024,
+          "$type": "com.linkedin.common.Date"
+        },
+        "$type": "com.linkedin.common.DateRange"
+      },
+      "multiLocaleCompanyName": {
+        "en_US": "Empresa Fictícia Labs",
+        "pt_BR": "Empresa Fictícia Labs"
+      },
+      "companyName": "Empresa Fictícia Labs",
+      "companyUrn": "urn:li:fsd_company:10000",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:(ACoAAAexample0000000000000000000000000000000,grupo1)",
+      "dateRange": {
+        "start": {
+          "month": 6,
+          "year": 2022,
+          "$type": "com.linkedin.common.Date"
+        },
+        "end": {
+          "month": 8,
+          "year": 2022,
+          "$type": "com.linkedin.common.Date"
+        },
+        "$type": "com.linkedin.common.DateRange"
+      },
+      "multiLocaleCompanyName": {
+        "en_US": null,
+        "pt_BR": null
+      },
+      "companyName": null,
+      "companyUrn": "urn:li:fsd_company:10001",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup"
+    },
+    {
+      "entityUrn": "urn:li:fsd_profilePositionGroup:(ACoAAAexample0000000000000000000000000000000,grupo2)",
+      "dateRange": {
+        "start": {
+          "month": 2,
+          "year": 2021,
+          "$type": "com.linkedin.common.Date"
+        },
+        "end": {
+          "month": 1,
+          "year": 2022,
+          "$type": "com.linkedin.common.Date"
+        },
+        "$type": "com.linkedin.common.DateRange"
+      },
+      "multiLocaleCompanyName": {
+        "en_US": "Instituto Exemplo",
+        "pt_BR": "Instituto Exemplo"
+      },
+      "companyName": "Instituto Exemplo",
+      "companyUrn": "urn:li:fsd_company:10002",
+      "$type": "com.linkedin.voyager.dash.identity.profile.PositionGroup"
+    }
+  ]
+}

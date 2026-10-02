@@ -1,9 +1,44 @@
 {
-  "extName": { "message": "QuickLook - Profile Preview" },
-  "extDescription": { "message": "See a LinkedIn person's summary on hover, without leaving the page." },
-  "cardLoading": { "message": "Loading…" },
-  "cardError": { "message": "This profile could not be loaded." },
-  "cardClose": { "message": "Close" },
-  "cardWait": { "message": "Too many lookups in a row. Wait a few seconds." },
-  "cardBackoff": { "message": "LinkedIn is limiting requests. Try again in $1 s." }
+  "extName": {
+    "message": "QuickLook - Profile Preview"
+  },
+  "extDescription": {
+    "message": "See a LinkedIn person's summary on hover, without leaving the page."
+  },
+  "cardLoading": {
+    "message": "Loading…"
+  },
+  "cardError": {
+    "message": "This profile could not be loaded."
+  },
+  "cardClose": {
+    "message": "Close"
+  },
+  "cardWait": {
+    "message": "Too many lookups in a row. Wait a few seconds."
+  },
+  "cardBackoff": {
+    "message": "LinkedIn is limiting requests. Try again in $1 s."
+  },
+  "cardPartial": {
+    "message": "Some information could not be loaded."
+  },
+  "cardReport": {
+    "message": "Report a problem"
+  },
+  "cardSince": {
+    "message": "since $1"
+  },
+  "cardDegree1": {
+    "message": "1st · connected"
+  },
+  "cardDegree2": {
+    "message": "2nd degree"
+  },
+  "cardDegree3": {
+    "message": "3rd degree or more"
+  },
+  "cardAvatarAlt": {
+    "message": "Profile picture"
+  }
 }

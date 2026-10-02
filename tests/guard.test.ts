@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import fixture from "./fixtures/voyager-person.json";
 import { start } from "../src/content";
-import { fakeChrome, memoryStorage } from "./helpers";
+import { fakeChrome, fixtures, linkedinFetch, memoryStorage } from "./helpers";
 
 const HOUR = 60 * 60_000;
 const cardText = () => document.getElementById("quicklook-host")!.shadowRoot!.textContent ?? "";
@@ -29,9 +28,7 @@ describe("Guardião de requisições, visto pela página", () => {
     vi.stubGlobal("chrome", fakeChrome());
     status = 200;
     document.body.innerHTML = Array.from({ length: 25 }, (_, i) => `<a id="p${i}" href="/in/pessoa-${i}/">P${i}</a>`).join("");
-    fetchMock = vi.fn(async (url: string) =>
-      url.startsWith("/voyager/api/me") ? new Response("{}") : new Response(JSON.stringify(fixture), { status }),
-    );
+    fetchMock = linkedinFetch({ profile: () => new Response(fixtures.profile, { status }) });
     storage = memoryStorage();
     start(document, { fetch: fetchMock as unknown as typeof fetch, storage });
   });
@@ -55,7 +52,7 @@ describe("Guardião de requisições, visto pela página", () => {
     fetchMock.mockImplementation(async (url: string) => {
       if (!url.includes("memberIdentity")) return new Response("{}");
       await new Promise<void>((r) => (release = r));
-      return new Response(JSON.stringify(fixture));
+      return new Response(fixtures.profile);
     });
     hover(link(0));
     await wait(400);
