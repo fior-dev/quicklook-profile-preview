@@ -14,6 +14,6 @@
 | 16 | Apagar `quicklook-*.json` de `Downloads` (dados reais de terceiros; já viraram fixtures anonimizadas) | José | sessão 2026-10-01 |
 | 17 | Cookie `li_at` foi colado na conversa; José fez logout das sessões. Não colar cookies de novo | — | sessão 2026-10-01 |
 | 18 | Confirmar a URL de composição de mensagem (`/messaging/compose/?recipient=<id do urn>` em `src/export.ts`, **não confirmado**): clicar "Enviar mensagem" no Card e ver se abre a conversa com a Pessoa | José | ticket #8 |
-| 19 | Ligar o GitHub Pages para a política de privacidade e registrar a URL pública (o popup hoje aponta para `PRIVACY.md` no repositório) | autorização do José | ticket #17 |
-| 20 | Tickets #9 a #15 (Detalhes, Perfil secundário, Empresa) precisam de capturas reais (`.scratch/capturar.js`) de cada endpoint antes de implementar | José, rodar a captura | spec #1 |
+| 20 | Tickets #9 a #15 precisam de capturas reais: `.scratch/capturar-detalhes-pessoa.js` (numa página `/in/<slug>/`) e `.scratch/capturar-empresa.js` (numa página `/company/<slug>/`) | José, rodar a captura | spec #1 |
 | 21 | Aviso do Sales Navigator só olha o caminho ao carregar a página; navegação interna sem recarregar não o mostra | — | ticket #16 |
+| 22 | Card muito alto (Sobre expandido) passa da borda da tela; hoje a saída é arrastar pela alça do topo. Avaliar altura máxima com rolagem | — | feedback do José, 10/10 |

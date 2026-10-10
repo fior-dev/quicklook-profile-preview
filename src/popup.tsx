@@ -5,7 +5,7 @@ import { INTEREST_URL } from "./interest";
 import { DELAYS, loadSettings, DEFAULTS, type Settings, type SettingsSource } from "./settings";
 
 const REPO = "https://github.com/fior-dev/quicklook-profile-preview";
-const PRIVACY = `${REPO}/blob/main/PRIVACY.md`;
+const PRIVACY = "https://fior-dev.github.io/quicklook-profile-preview/PRIVACY";
 
 type Session = { get(keys: null): Promise<Record<string, unknown>>; remove(keys: string[]): Promise<void> };
 
