@@ -92,7 +92,7 @@ describe("popup", () => {
       expect(a.rel).toContain("noopener");
     }
     expect(links[0].href).toBe(INTEREST_URL);
-    expect(links[1].href).toMatch(/PRIVACY\.md$/);
+    expect(links[1].href).toBe("https://fior-dev.github.io/quicklook-profile-preview/PRIVACY");
     expect(links[2].href).toBe("https://github.com/fior-dev/quicklook-profile-preview");
   });
 });

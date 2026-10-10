@@ -108,3 +108,38 @@ describe("tema", () => {
     expect(await themeWith("")).toBe("dark");
   });
 });
+
+describe("arrastar o Card", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.stubGlobal("chrome", fakeChrome());
+    document.cookie = 'JSESSIONID="ajax:123"';
+    document.body.innerHTML = `<a id="g" href="/in/ana-exemplo/">Ana</a>`;
+    start(document, { fetch: linkedinFetch() as unknown as typeof fetch, storage: memoryStorage(), settings: fakeSync() });
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+  });
+
+  it("arrastar pela alça move o Card e ele não volta ao trocar de estado; fechar zera", async () => {
+    document.getElementById("g")!.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+    await wait(400);
+    const grip = card().querySelector("[data-drag]")!;
+    const ev = (type: string, x: number, y: number) => grip.dispatchEvent(new MouseEvent(type, { bubbles: true, clientX: x, clientY: y }));
+    const left0 = host().offsetLeft;
+    const top0 = host().offsetTop;
+    ev("pointerdown", left0 + 10, top0 + 5);
+    ev("pointermove", left0 + 110, top0 - 200);
+    ev("pointerup", left0 + 110, top0 - 200);
+    expect(host().style.left).toBe(`${left0 + 100}px`);
+    expect(host().style.top).toBe(`${Math.max(0, top0 - 205)}px`);
+    // novo estado renderizado não reposiciona
+    const moved = host().style.left;
+    (card().querySelector("button[type=button]") as HTMLButtonElement).click();
+    expect(host().style.left).toBe(moved);
+    // depois de soltar, mover não arrasta mais
+    ev("pointermove", 500, 500);
+    expect(host().style.left).toBe(moved);
+  });
+});

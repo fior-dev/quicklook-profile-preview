@@ -66,6 +66,7 @@ export const detectTheme = (doc: Document): "dark" | "light" => {
 
 const View = ({ state, theme, onClose }: { state: CardState; theme: string; onClose: () => void }) => (
   <div role="dialog" aria-label={t("cardLabel")} tabIndex={-1} data-theme={theme} class="relative rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 p-3 pr-8 text-sm text-gray-900 dark:text-gray-100 shadow-lg">
+    <div data-drag class="absolute top-0 right-8 left-0 h-3 cursor-move touch-none" aria-hidden="true" />
     <button type="button" class="absolute top-1 right-2 text-lg leading-none text-gray-500 dark:text-gray-400" aria-label={t("cardClose")} onClick={onClose}>
       ×
     </button>
@@ -179,12 +180,36 @@ export function createCard(doc: Document, onClose: () => void) {
   root.append(style, mount);
   doc.body.append(host);
   const win = doc.defaultView!;
+  // Depois de arrastado, o Card fica onde o Usuário o pôs até fechar (as trocas de estado não o reposicionam).
+  let moved = false;
+  mount.addEventListener("pointerdown", (e) => {
+    const grip = (e.target as Element).closest("[data-drag]");
+    if (!grip) return;
+    e.preventDefault();
+    const pe = e as PointerEvent;
+    const dx = pe.clientX - host.offsetLeft;
+    const dy = pe.clientY - host.offsetTop;
+    const move = (m: Event) => {
+      const p = m as PointerEvent;
+      moved = true;
+      host.style.left = `${Math.max(0, Math.min(p.clientX - dx, win.innerWidth - WIDTH))}px`;
+      host.style.top = `${Math.max(0, Math.min(p.clientY - dy, win.innerHeight - 40))}px`;
+    };
+    const up = () => {
+      mount.removeEventListener("pointermove", move);
+      mount.removeEventListener("pointerup", up);
+    };
+    mount.addEventListener("pointermove", move);
+    mount.addEventListener("pointerup", up);
+    grip.setPointerCapture?.(pe.pointerId);
+  });
 
   return {
     host,
     show(state: CardState, anchor: DOMRect) {
       render(<View state={state} theme={detectTheme(doc)} onClose={onClose} />, mount);
       host.style.display = "block";
+      if (moved) return;
       // Abaixo do Gatilho; se não couber, acima; horizontalmente sempre dentro da tela.
       const h = host.offsetHeight;
       const below = anchor.bottom + GAP;
@@ -196,6 +221,7 @@ export function createCard(doc: Document, onClose: () => void) {
       (mount.firstElementChild as HTMLElement | null)?.focus();
     },
     hide() {
+      moved = false;
       host.style.display = "none";
     },
   };
