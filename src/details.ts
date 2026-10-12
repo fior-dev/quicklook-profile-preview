@@ -61,7 +61,9 @@ export const knownFrom = (html: string): Extract<Detail, { kind: "known" }> | un
     (l) => /network=%5B%22F%22%5D/.test(l.getAttribute("href") ?? "") && /currentCompany=/.test(l.getAttribute("href") ?? ""),
   );
   const text = a?.textContent?.replace(/\s+/g, " ").trim();
-  return a && text ? { kind: "known", text, url: a.href } : undefined;
+  // O href vem da página e vai para um <a> do Card: só aceita https em www.linkedin.com (nada de javascript: ou outro domínio).
+  const url = a && new URL(a.getAttribute("href") ?? "", "https://www.linkedin.com/");
+  return text && url && url.protocol === "https:" && url.hostname === "www.linkedin.com" ? { kind: "known", text, url: url.href } : undefined;
 };
 
 // Um cliente por chamada: cabeçalhos do LinkedIn, tempo limite e 429 viram `rateLimited`.

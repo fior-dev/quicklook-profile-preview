@@ -131,3 +131,11 @@ describe("seções de Detalhes no Card", () => {
     expect(out).toContain("Carla e mais 7 conexões trabalham aqui: https://www.linkedin.com/search/results/people/");
   });
 });
+
+describe("links vindos do HTML", () => {
+  it("pessoas conhecidas: href fora de https://www.linkedin.com é descartado", () => {
+    const evil = (href: string) => `<a href="${href}">x e mais 2 conexões</a>`;
+    expect(knownFrom(evil("javascript:alert(1)//search/results/people/?network=%5B%22F%22%5D&currentCompany=1"))).toBeUndefined();
+    expect(knownFrom(evil("https://evil.example/search/results/people/?network=%5B%22F%22%5D&currentCompany=1"))).toBeUndefined();
+  });
+});
