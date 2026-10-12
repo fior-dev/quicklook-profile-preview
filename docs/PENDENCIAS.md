@@ -18,5 +18,5 @@
 | 25 | Sinal de que há Perfil secundário: a seção `SupportedLocales` do HTML do perfil tem `initialContent` preenchido (num perfil) ou `$undefined` (noutro). Visto em captura de 11/10, falta a requisição da troca | captura de rede da troca de idioma | ticket #13 |
 | 22 | Card muito alto (Sobre expandido) passa da borda da tela; hoje a saída é arrastar pela alça do topo. Avaliar altura máxima com rolagem | — | feedback do José, 10/10 |
 | 26 | Revisar o texto do aviso de primeiro uso (`welcome*` em `_locales/*/messages.json`) e, se quiser peso jurídico, passar por advogado: a frase "não responde por medidas do LinkedIn" é intenção, não parecer | José | ADR 0001 |
-| 27 | Pacote da loja (#18): ícones 16/48/128, textos pt/en, justificativa de permissões, `.zip`; envio só com autorização | agente prepara, José autoriza | ticket #18 |
-| 28 | José conferir no Chrome, antes de publicar, o que está só em teste automático (lista em `docs/CHECKLIST-v1.md`, seção "Sem validação manual") | José | `docs/CHECKLIST-v1.md` |
+| 27 | Pacote da loja (#18): ícones e `.zip` prontos; textos em `docs/store/listing.md`. Faltam: capturas de tela (José) e autorização do envio | José | ticket #18 |
+| 28 | José validar à mão o aviso de primeiro uso (único item do `docs/CHECKLIST-v1.md` que ele quer ver; o resto ele confia nos testes automáticos) | José | `docs/CHECKLIST-v1.md` |

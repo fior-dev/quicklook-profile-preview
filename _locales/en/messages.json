@@ -3,7 +3,7 @@
     "message": "QuickLook - Profile Preview"
   },
   "extDescription": {
-    "message": "See a LinkedIn person's summary on hover, without leaving the page."
+    "message": "See a summary of a LinkedIn person or company on hover, without leaving the page."
   },
   "cardLoading": {
     "message": "Loading…"
