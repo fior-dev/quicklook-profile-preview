@@ -38,3 +38,13 @@ Tudo pelo agente, em `main`: `src/settings.ts`, `src/i18n.ts` (idioma forçado c
 ## Arquivos desta sessão
 
 Ver "O que foi alterado". Commits: `704718c`, `5fc7972`, `741287a`, `419195c`, `3e78ac4` e o de correções da revisão.
+
+## Continuação em 10 e 11/10/2026
+
+O José ligou o GitHub Pages (autorizado), criou o Tally (`https://tally.so/r/zxpKL1`, já em `src/interest.ts`), testou no LinkedIn real e pediu o Card arrastável (feito, alça no topo). Rodou capturas de Pessoa (dois perfis públicos) e Empresa (Bubble).
+
+- **Empresa (#14):** `GET /voyager/api/organization/companies?q=universalName&universalName=<slug>` traz nome, tagline, setor, tamanho, sede, seguidores, site e logo em uma requisição. Implementado.
+- **Conexões em comum (#10):** a decoração `com.linkedin.voyager.dash.deco.identity.profile.TopCardSupplementary-120` em `identity/dash/profiles?q=memberIdentity` traz um `Insight` com o texto e os nomes citados. Implementado. Ela também traz `memberDistance`, `followerCount` e a Formação principal.
+- **Experiências (#9, parcial), vagas e pessoas conhecidas (#15, parcial):** a partir de HTML estrutural. A Formação e o contato não: `/details/education/` e `/overlay/contact-info/` chegam sem o conteúdo (carrega depois por outra requisição).
+- **Onde eu errei:** meu `capturar-detalhes-pessoa.js` montou a busca de conexões em comum com `urn` indefinido (a URL saiu `%22urn%22`), e a captura de postagens e o endpoint `profileUpdatesV2` (403) eram palpites. As duas capturas do mesmo perfil (en e pt-BR) saíram iguais: o script não troca o idioma.
+- **Aberto:** capturas de rede (`.scratch/capturar-rede.js`) para formação, contato, postagens e troca de idioma; pendências 20 a 25 em `docs/PENDENCIAS.md`.
