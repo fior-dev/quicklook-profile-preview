@@ -1,15 +1,18 @@
 import { render } from "preact";
 import { useState } from "preact/hooks";
-import { companyMarkdown, companyUrl, fileName, formatSince, messageUrl, personMarkdown, profileUrl, sizeText } from "./export";
+import { companyMarkdown, companyUrl, detailsMarkdown, fileName, formatSince, messageUrl, personMarkdown, profileUrl, sizeText } from "./export";
+import type { Detail } from "./details";
 import { t } from "./i18n";
 import type { CompanySummary, Field, PersonSummary } from "./source";
 import css from "./style.css?inline";
 
+// Carrega uma seção de Detalhes; "limited" e "error" viram mensagem dentro da seção, sem derrubar o Card.
+export type Loader = (section: string) => Promise<Detail | "limited" | "error">;
 export type Placeholder = { name?: string; photo?: string };
 export type CardState =
   | { kind: "loading"; placeholder: Placeholder }
-  | { kind: "ready"; person: Partial<PersonSummary>; failed: Field[]; lang: string }
-  | { kind: "company"; company: Partial<CompanySummary>; failed: Field[]; lang: string }
+  | { kind: "ready"; person: Partial<PersonSummary>; failed: Field[]; lang: string; load: Loader }
+  | { kind: "company"; company: Partial<CompanySummary>; failed: Field[]; lang: string; load: Loader }
   | { kind: "limited"; mode: "wait" | "backoff"; retryAt: number }
   | { kind: "error" };
 
@@ -88,8 +91,8 @@ const View = ({ state, theme, onClose }: { state: CardState; theme: string; onCl
           : t("cardBackoff", String(Math.max(1, Math.ceil((state.retryAt - Date.now()) / 1000))))}
       </p>
     )}
-    {state.kind === "ready" && <Summary {...state} />}
-    {state.kind === "company" && <CompanyView {...state} />}
+    {state.kind === "ready" && <Summary key={state.person.slug} {...state} />}
+    {state.kind === "company" && <CompanyView key={state.company.slug} {...state} />}
   </div>
 );
 
@@ -137,6 +140,93 @@ const Actions = ({ text, fileSlug, pageUrl, messageUrl: msg }: ActionsProps) => 
   );
 };
 
+type Section = { state: "loading" | "limited" | "error" | Detail; open: boolean };
+
+const DetailBody = ({ s }: { s: Section["state"] }) => {
+  if (s === "loading") return <p class="text-gray-500 dark:text-gray-400">{t("cardLoading")}</p>;
+  if (s === "error") return <p>{t("detailError")}</p>;
+  if (s === "limited") return <p>{t("detailLimited")}</p>;
+  const empty = <p class="text-gray-500 dark:text-gray-400">{t("detailEmpty")}</p>;
+  const link = "text-blue-700 underline dark:text-blue-400";
+  switch (s.kind) {
+    case "experience":
+      return s.items.length ? (
+        <ul class="space-y-1">
+          {s.items.map((i) => (
+            <li>
+              <span class="font-medium">{i.title}</span> · {i.company}
+              <span class="block text-xs text-gray-500 dark:text-gray-400">{i.dates}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        empty
+      );
+    case "mutual":
+      return s.text ? <p>{s.text}</p> : empty;
+    case "jobs":
+      return s.items.length ? (
+        <ul class="space-y-1">
+          {s.items.map((j) => (
+            <li>
+              <a class={link} href={j.url} target="_blank" rel="noopener noreferrer">
+                {j.title}
+              </a>
+              {j.location && <span class="block text-xs text-gray-500 dark:text-gray-400">{j.location}</span>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        empty
+      );
+    case "known":
+      return s.text ? (
+        <a class={link} href={s.url} target="_blank" rel="noopener noreferrer">
+          {s.text}
+        </a>
+      ) : (
+        empty
+      );
+  }
+};
+
+// Cada seção só busca quando aberta pela primeira vez (ou de novo, depois de erro).
+const Details = ({ ids, load, onLoaded }: { ids: string[]; load: Loader; onLoaded: (d: Detail) => void }) => {
+  const [sections, setSections] = useState<Record<string, Section>>({});
+  const toggle = (id: string) => {
+    const cur = sections[id];
+    if (cur && cur.state !== "error" && cur.state !== "limited") return setSections({ ...sections, [id]: { ...cur, open: !cur.open } });
+    setSections({ ...sections, [id]: { open: true, state: "loading" } });
+    load(id).then((r) => {
+      if (typeof r !== "string") onLoaded(r);
+      setSections((all) => ({ ...all, [id]: { open: true, state: r } }));
+    });
+  };
+  return (
+    <div class="mt-2 border-t border-gray-300 pt-1 dark:border-gray-600">
+      {ids.map((id) => (
+        <div>
+          <button type="button" class="flex w-full justify-between py-1 text-left font-medium" aria-expanded={!!sections[id]?.open} onClick={() => toggle(id)}>
+            {t(`detail_${id}`)}
+            <span aria-hidden="true">{sections[id]?.open ? "−" : "+"}</span>
+          </button>
+          {sections[id]?.open && (
+            <div class="pb-1 text-xs">
+              <DetailBody s={sections[id].state} />
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Detalhes já carregados entram na Exportação; trocar de Pessoa/Empresa (key) zera a lista.
+const useLoaded = () => {
+  const [loaded, setLoaded] = useState<Detail[]>([]);
+  return [loaded, (d: Detail) => setLoaded((all) => [...all.filter((x) => x.kind !== d.kind), d])] as const;
+};
+
 const Partial_ = ({ failed }: { failed: Field[] }) =>
   failed.length > 0 ? (
     <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
@@ -147,7 +237,9 @@ const Partial_ = ({ failed }: { failed: Field[] }) =>
     </p>
   ) : null;
 
-const CompanyView = ({ company: c, failed, lang }: { company: Partial<CompanySummary>; failed: Field[]; lang: string }) => (
+const CompanyView = ({ company: c, failed, lang, load }: { company: Partial<CompanySummary>; failed: Field[]; lang: string; load: Loader }) => {
+  const [loaded, onLoaded] = useLoaded();
+  return (
   <>
     <div class="flex gap-2">
       <Avatar src={c.logo} />
@@ -170,12 +262,15 @@ const CompanyView = ({ company: c, failed, lang }: { company: Partial<CompanySum
         </a>
       </p>
     )}
-    <Actions text={() => companyMarkdown(c, lang)} fileSlug={c.slug ?? "empresa"} pageUrl={c.slug && companyUrl(c.slug)} />
+    <Details ids={["jobs", "known"]} load={load} onLoaded={onLoaded} />
+    <Actions text={() => companyMarkdown(c, lang, loaded)} fileSlug={c.slug ?? "empresa"} pageUrl={c.slug && companyUrl(c.slug)} />
     <Partial_ failed={failed} />
   </>
-);
+  );
+};
 
-const Summary = ({ person: p, failed, lang }: { person: Partial<PersonSummary>; failed: Field[]; lang: string }) => {
+const Summary = ({ person: p, failed, lang, load }: { person: Partial<PersonSummary>; failed: Field[]; lang: string; load: Loader }) => {
+  const [loaded, onLoaded] = useLoaded();
   const since = p.since && formatSince(p.since, lang);
   return (
     <>
@@ -198,7 +293,8 @@ const Summary = ({ person: p, failed, lang }: { person: Partial<PersonSummary>; 
       )}
       {p.location && <p class="text-gray-500 dark:text-gray-400">{p.location}</p>}
       {p.about && <About text={p.about} />}
-      <Actions text={() => personMarkdown(p, lang)} fileSlug={p.slug ?? "perfil"} pageUrl={p.slug && profileUrl(p.slug)} messageUrl={p.urn && messageUrl(p.urn)} />
+      <Details ids={["experience", "mutual"]} load={load} onLoaded={onLoaded} />
+      <Actions text={() => personMarkdown(p, lang, loaded)} fileSlug={p.slug ?? "perfil"} pageUrl={p.slug && profileUrl(p.slug)} messageUrl={p.urn && messageUrl(p.urn)} />
       <Partial_ failed={failed} />
     </>
   );

@@ -1,4 +1,5 @@
-import { createCard, type CardState, type Placeholder } from "./Card";
+import { createCard, type CardState, type Loader, type Placeholder } from "./Card";
+import { fetchExperience, fetchJobs, fetchKnown, fetchMutual } from "./details";
 import { createGuard, type Store } from "./guard";
 import { setLang } from "./i18n";
 import { showInterestNotice } from "./notice";
@@ -57,7 +58,20 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   const guard = createGuard(deps.storage, {
     person: (slug: string) => fetchPersonSummary(slug, { fetch: deps.fetch, cookie: doc.cookie }),
     company: (slug: string) => fetchCompanySummary(slug, { fetch: deps.fetch, cookie: doc.cookie }),
+    experience: (slug: string) => fetchExperience(slug, { fetch: deps.fetch, cookie: doc.cookie }),
+    mutual: (slug: string) => fetchMutual(slug, { fetch: deps.fetch, cookie: doc.cookie }),
+    jobs: (slug: string) => fetchJobs(slug, { fetch: deps.fetch, cookie: doc.cookie }),
+    known: (slug: string) => fetchKnown(slug, { fetch: deps.fetch, cookie: doc.cookie }),
   });
+  // Detalhes passam pelo mesmo Guardião (cache, teto por minuto, backoff); só são pedidos quando o Usuário abre a seção.
+  const loaderFor = (slug: string, lang: string): Loader => async (section) => {
+    try {
+      const r = await guard.get(section as "experience" | "mutual" | "jobs" | "known", slug, lang);
+      return "limited" in r ? "limited" : r.failed.length ? "error" : r.detail;
+    } catch {
+      return "error";
+    }
+  };
   let open: ReturnType<typeof setTimeout> | undefined;
   let close: ReturnType<typeof setTimeout> | undefined;
   let current = 0; // invalida buscas em andamento quando o Card fecha ou troca de alvo
@@ -117,7 +131,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
           "limited" in r
             ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
             : r.person.name
-              ? { kind: "ready", person: { slug, ...r.person }, failed: r.failed, lang }
+              ? { kind: "ready", person: { slug, ...r.person }, failed: r.failed, lang, load: loaderFor(slug, lang) }
               : { kind: "error" };
       } else {
         const r = await guard.get("company", slug, lang);
@@ -125,7 +139,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
           "limited" in r
             ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
             : r.company.name
-              ? { kind: "company", company: { slug, ...r.company }, failed: r.failed, lang }
+              ? { kind: "company", company: { slug, ...r.company }, failed: r.failed, lang, load: loaderFor(slug, lang) }
               : { kind: "error" };
       }
     } catch {

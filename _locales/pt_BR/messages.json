@@ -151,5 +151,26 @@
   },
   "exportPage": {
     "message": "Página"
+  },
+  "detail_experience": {
+    "message": "Experiências"
+  },
+  "detail_mutual": {
+    "message": "Conexões em comum"
+  },
+  "detail_jobs": {
+    "message": "Vagas abertas"
+  },
+  "detail_known": {
+    "message": "Pessoas que você conhece"
+  },
+  "detailError": {
+    "message": "Não foi possível carregar esta seção."
+  },
+  "detailEmpty": {
+    "message": "Nada para mostrar."
+  },
+  "detailLimited": {
+    "message": "O LinkedIn está limitando as requisições. Tente de novo em instantes."
   }
 }

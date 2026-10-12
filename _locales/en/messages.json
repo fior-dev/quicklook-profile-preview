@@ -151,5 +151,26 @@
   },
   "exportPage": {
     "message": "Page"
+  },
+  "detail_experience": {
+    "message": "Experience"
+  },
+  "detail_mutual": {
+    "message": "Mutual connections"
+  },
+  "detail_jobs": {
+    "message": "Open jobs"
+  },
+  "detail_known": {
+    "message": "People you know"
+  },
+  "detailError": {
+    "message": "This section could not be loaded."
+  },
+  "detailEmpty": {
+    "message": "Nothing to show."
+  },
+  "detailLimited": {
+    "message": "LinkedIn is limiting requests. Try again shortly."
   }
 }
