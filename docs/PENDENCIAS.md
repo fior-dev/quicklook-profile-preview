@@ -8,7 +8,6 @@
 | 12 | Localização de perfis de terceiros: a Voyager só traz `location.countryCode` (ex.: `BR`) e o texto ("Florianópolis, Santa Catarina, Brasil") só existe no HTML do topo, em posição; fora do Card por enquanto | decidir se vale ler do HTML | ticket #4, captura de 11/10 |
 | 13 | "Tempo no cargo" mostra só a data de início ("desde mar. de 2024"), não a duração | — | ticket #4 |
 | 14 | Teto de 20 perfis/min do Guardião não é atômico entre abas e pode estourar em 1 ou 2 perfis | trancar via service worker se importar | ticket #5 |
-| 16 | Apagar de `Downloads` os `quicklook-*.json` (dados reais de terceiros; os de 01/10 já viraram fixtures anonimizadas, os de 11/10 ainda não: `quicklook-detalhes-*`, `quicklook-empresa-bubble`). Três deles (`quicklook-detalhes-*`) trazem também o `JSESSIONID` da sessão atual, visto em 12/10 | José | sessão 2026-10-01 |
 | 17 | Cookie `li_at` foi colado na conversa; José fez logout das sessões. Não colar cookies de novo | — | sessão 2026-10-01 |
 | 20 | Depois da v1, se houver demanda: **formação** (história 25), **contato** (29 a 31), **postagens** (27, 28, 38). Precisam de captura de rede (`.scratch/capturar-rede.js`). Fora da v1: issues #11 e #12; o PT/EN (histórias 33 e 34, issue #13) foi descartado | José, rodar a captura | decisão de 12/10; `docs/CHECKLIST-v1.md` |
 | 21 | Aviso do Sales Navigator só olha o caminho ao carregar a página; navegação interna sem recarregar não o mostra | — | ticket #16 |
