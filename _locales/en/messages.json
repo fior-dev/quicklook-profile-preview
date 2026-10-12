@@ -127,5 +127,29 @@
   },
   "noticeClose": {
     "message": "Dismiss notice"
+  },
+  "companySize": {
+    "message": "$1 employees"
+  },
+  "companyFollowers": {
+    "message": "$1 followers"
+  },
+  "exportIndustry": {
+    "message": "Industry"
+  },
+  "exportSize": {
+    "message": "Size"
+  },
+  "exportHeadquarters": {
+    "message": "Headquarters"
+  },
+  "exportFollowers": {
+    "message": "Followers"
+  },
+  "exportWebsite": {
+    "message": "Website"
+  },
+  "exportPage": {
+    "message": "Page"
   }
 }

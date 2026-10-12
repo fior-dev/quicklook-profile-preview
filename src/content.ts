@@ -3,7 +3,7 @@ import { createGuard, type Store } from "./guard";
 import { setLang } from "./i18n";
 import { showInterestNotice } from "./notice";
 import { DEFAULTS, watchSettings, type SettingsSource } from "./settings";
-import { fetchOwnSlug, fetchPersonSummary } from "./source";
+import { fetchCompanySummary, fetchOwnSlug, fetchPersonSummary } from "./source";
 
 const CLOSE_MS = 300;
 
@@ -23,6 +23,27 @@ export function personSlug(a: HTMLAnchorElement): string | null {
   }
 }
 
+// Empresa: só `/company/<slug>/`; abas da Empresa (`/posts/`, `/jobs/`) são navegação interna, não Gatilho.
+export function companySlug(a: HTMLAnchorElement): string | null {
+  const u = new URL(a.getAttribute("href") ?? "", "https://www.linkedin.com/");
+  if (u.hostname !== "www.linkedin.com") return null;
+  const raw = /^\/company\/([^/]+)\/?$/.exec(u.pathname)?.[1];
+  if (!raw) return null;
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw;
+  }
+}
+
+type Target = { kind: "person" | "company"; slug: string };
+const targetOf = (a: HTMLAnchorElement): Target | null => {
+  const person = personSlug(a);
+  if (person) return { kind: "person", slug: person };
+  const company = companySlug(a);
+  return company ? { kind: "company", slug: company } : null;
+};
+
 // Nome e foto que a página já mostra, para o Card não parecer vazio enquanto carrega.
 const placeholderOf = (a: HTMLAnchorElement): Placeholder => {
   const name = a.textContent?.replace(/\s+/g, " ").trim().slice(0, 80);
@@ -33,7 +54,10 @@ const placeholderOf = (a: HTMLAnchorElement): Placeholder => {
 const triggerOf = (n: EventTarget | null) => (n as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
 
 export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store; settings: SettingsSource }) {
-  const guard = createGuard(deps.storage, (slug) => fetchPersonSummary(slug, { fetch: deps.fetch, cookie: doc.cookie }));
+  const guard = createGuard(deps.storage, {
+    person: (slug: string) => fetchPersonSummary(slug, { fetch: deps.fetch, cookie: doc.cookie }),
+    company: (slug: string) => fetchCompanySummary(slug, { fetch: deps.fetch, cookie: doc.cookie }),
+  });
   let open: ReturnType<typeof setTimeout> | undefined;
   let close: ReturnType<typeof setTimeout> | undefined;
   let current = 0; // invalida buscas em andamento quando o Card fecha ou troca de alvo
@@ -72,11 +96,13 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   // Ele se retira em silêncio; só um F5 na aba traz o script novo.
   const alive = () => !!chrome.runtime?.id || (card.host.remove(), false);
 
-  const openCard = async (a: HTMLAnchorElement, slug: string, focus = false) => {
+  const openCard = async (a: HTMLAnchorElement, { kind, slug }: Target, focus = false) => {
     if (!alive() || !settings.enabled) return;
-    ownSlug ??= fetchOwnSlug({ fetch: deps.fetch, cookie: cookie() });
     const id = ++current;
-    if (slug === (await ownSlug)) return;
+    if (kind === "person") {
+      ownSlug ??= fetchOwnSlug({ fetch: deps.fetch, cookie: cookie() });
+      if (slug === (await ownSlug)) return;
+    }
     if (id !== current) return;
     shown = a;
     const rect = a.getBoundingClientRect();
@@ -84,13 +110,24 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
     if (focus) card.focus();
     let state: CardState;
     try {
-      const r = await guard.person(slug, doc.documentElement.lang);
-      state =
-        "limited" in r
-          ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
-          : r.person.name
-            ? { kind: "ready", person: { slug, ...r.person }, failed: r.failed, lang: doc.documentElement.lang }
-            : { kind: "error" };
+      const lang = doc.documentElement.lang;
+      if (kind === "person") {
+        const r = await guard.get("person", slug, lang);
+        state =
+          "limited" in r
+            ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
+            : r.person.name
+              ? { kind: "ready", person: { slug, ...r.person }, failed: r.failed, lang }
+              : { kind: "error" };
+      } else {
+        const r = await guard.get("company", slug, lang);
+        state =
+          "limited" in r
+            ? { kind: "limited", mode: r.limited, retryAt: r.retryAt }
+            : r.company.name
+              ? { kind: "company", company: { slug, ...r.company }, failed: r.failed, lang }
+              : { kind: "error" };
+      }
     } catch {
       state = { kind: "error" };
     }
@@ -103,24 +140,24 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
     if (e.key === "Escape") return hide();
     if (!e.altKey || e.code !== "KeyQ" || !settings.enabled) return;
     const a = triggerOf(doc.activeElement);
-    const slug = a && personSlug(a);
-    if (!a || !slug) return;
+    const target = a && targetOf(a);
+    if (!a || !target) return;
     e.preventDefault();
     clearTimeout(open);
     clearTimeout(close);
     if (a === shown) card.focus();
-    else openCard(a, slug, true);
+    else openCard(a, target, true);
   });
 
   doc.addEventListener("mouseover", (e) => {
     if (!alive() || !settings.enabled) return;
     const a = triggerOf(e.target);
-    const slug = a && personSlug(a);
-    if (!a || !slug) return;
+    const target = a && targetOf(a);
+    if (!a || !target) return;
     clearTimeout(close);
     if (a === shown) return;
     clearTimeout(open);
-    open = setTimeout(() => openCard(a, slug), settings.delay);
+    open = setTimeout(() => openCard(a, target), settings.delay);
   });
 
   doc.addEventListener("mouseout", (e) => {
