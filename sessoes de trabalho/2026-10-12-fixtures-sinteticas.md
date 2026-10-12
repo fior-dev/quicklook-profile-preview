@@ -38,7 +38,7 @@ Nada a corrigir no meio do caminho. O script de troca (`.scratch/sintetizar.mjs`
 
 O José apagou à mão os 10 `~/Downloads/quicklook-*.json` (estão na Lixeira). Conferi que nenhum está no repositório: `find` na árvore inteira (incluindo `.scratch/` e ignorados) e `git log --all --name-only` não acham `quicklook-*.json`; grep no conteúdo e no histórico pelos slugs dos perfis capturados e por `ajax:<dígitos>` (formato do `JSESSIONID`) também não acha nada. Removi a #16 de `docs/PENDENCIAS.md`. O José vai fazer logout e login no LinkedIn para renovar o `JSESSIONID`.
 
-Os de 11/10 (`quicklook-detalhes-*`, `quicklook-empresa-bubble`) nunca viraram fixture. Se a #6 precisar deles, a captura é refeita e anonimizada antes de entrar em `tests/fixtures/`.
+Depois o José esvaziou a Lixeira. Os de 11/10 (`quicklook-detalhes-*`, `quicklook-empresa-bubble`) nunca viraram fixture. Pus o lembrete na #6 e não aqui, porque a #6 é quem vai precisar deles: a captura é refeita e anonimizada antes de entrar em `tests/fixtures/`.
 
 ## Adendo: reescrita do histórico (#28, #29)
 

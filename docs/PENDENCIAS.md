@@ -1,7 +1,7 @@
 # Pendências
 | # | Pendência | Depende de | Origem |
 |---|---|---|---|
-| 6 | Mapear endpoints Voyager dos Detalhes e gravar fixtures | tickets #9 a #15 | spec #1 |
+| 6 | Mapear endpoints Voyager dos Detalhes e gravar fixtures. As capturas de 11/10 (`quicklook-detalhes-*`, `quicklook-empresa-bubble`) foram apagadas sem virar fixture: capturar de novo e anonimizar antes de entrar em `tests/fixtures/` | tickets #9 a #15 | spec #1 |
 | 9 | `AGENTS.md`, `CLAUDE.md`, `CONTEXT.md`, `.gitignore` e o spec seguem fora do git, por decisão do José em 01/10 | — | sessão 2026-10-01 |
 | 10 | Gravar fixture de HTML em inglês (as duas capturas de "en" vieram com a página em português) | José, rodar `.scratch/capturar-html.js` com a interface do LinkedIn em inglês | ticket #4 |
 | 11 | Confirmar o valor do grau de conexão para 3º ou mais (só vi `Distance1` e `Distance2`; o código aceita `Distance3`) | perfil de 3º grau | ticket #4 |
