@@ -177,7 +177,7 @@
     "message": "Antes de começar"
   },
   "welcomeIntro": {
-    "message": "O QuickLook mostra um resumo de quem você encontra no LinkedIn sem sair da página. Para isso, ele lê as mesmas informações que o LinkedIn já mostra a você, só quando você passa o mouse."
+    "message": "O QuickLook mostra um resumo de quem você encontra no LinkedIn sem sair da página. Para isso, ele lê as mesmas informações que o LinkedIn já mostra a você, só quando você para o mouse sobre o nome ou a foto de uma pessoa ou empresa."
   },
   "welcomeDoesTitle": {
     "message": "O que ele não faz"
@@ -189,7 +189,7 @@
     "message": "Não manda mensagens, não conecta, não segue e não clica por você."
   },
   "welcomeNo3": {
-    "message": "Não lê nada em segundo plano: só quando você pede."
+    "message": "Não lê nada em segundo plano: só quando você para o mouse sobre o nome ou a foto de uma pessoa ou empresa, ou abre uma seção do Card."
   },
   "welcomeRiskTitle": {
     "message": "O que você precisa saber"
@@ -198,7 +198,7 @@
     "message": "O LinkedIn tem regras próprias de uso, e elas não permitem extensões que leem perfis, mesmo uma discreta como esta."
   },
   "welcomeRisk2": {
-    "message": "Na prática, o risco é baixo: o QuickLook faz poucas consultas, só quando você pede, e se limita sozinho para não exagerar. Mas não é zero: em teoria, o LinkedIn pode limitar a sua conta ou pedir a remoção da extensão."
+    "message": "Na prática, o risco é baixo: o QuickLook faz poucas consultas, só quando você para o mouse sobre um nome ou foto, e se limita sozinho para não exagerar. Mas não é zero: em teoria, o LinkedIn pode limitar a sua conta ou pedir a remoção da extensão."
   },
   "welcomeConfirm": {
     "message": "Ao continuar, você confirma que leu este aviso e que a decisão de usar é sua. O QuickLook é independente, não tem vínculo com o LinkedIn e não responde por medidas que o LinkedIn tome sobre a sua conta."
