@@ -88,7 +88,9 @@ Mostrar, num cartão ao passar o mouse sobre o nome ou a foto de uma pessoa ou e
   4. Card no tema escuro.
   5. Aviso de primeiro uso.
 - Cuidado com dados de terceiros nas imagens: use perfis de figuras públicas ou cubra nomes e fotos de pessoas que não autorizaram.
-- Peça promocional pequena (440×280): opcional, não preparada.
+- **Peça promocional pequena (440×280): obrigatória** segundo https://developer.chrome.com/docs/webstore/images. Pronta em `docs/store/promo-440x280.png` (fundo azul com a lupa, sem texto).
+- Ícone de 128 px: arte de 96 px com 16 px de margem transparente, como a loja recomenda (já ajustado).
+- Passo a passo completo da publicação: `docs/RUNBOOK-publicar-na-loja.md`.
 
 ## Lista de envio
 
