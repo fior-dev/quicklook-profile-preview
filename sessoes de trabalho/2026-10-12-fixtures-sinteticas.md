@@ -47,3 +47,11 @@ Com autorização do José, instalei o `git-filter-repo` (pip, fora do PATH: `%A
 Errei na primeira passada. Esta própria sessão, e o adendo da #16, citavam os IDs, os nomes completos e quatro slugs de perfil, e eu já tinha empurrado isso em `e006324` e `90671fb`. O grep no histórico reescrito achou "Double Degree student from…", que eu tinha escrito aqui. Rodei a reescrita de novo com essa troca. Lição: o arquivo de sessão que descreve a limpeza não pode citar o dado que está sendo limpo.
 
 Conferi depois: as 30 versões de `main` não têm nenhum dos trechos, todos os commits têm o noreply e os 79 testes passam. Mas `cf5aada` (SHA antigo) ainda responde na API do GitHub com o e-mail antigo. A remoção definitiva depende do suporte do GitHub (#28).
+
+## Adendo: decisões do José sobre o que sobrou
+
+- Sem pedido ao suporte do GitHub. Os SHAs antigos ficam acessíveis até a coleta de lixo automática. A extensão não está divulgada, então ele aceita esse prazo. A #28 saiu de `docs/PENDENCIAS.md`.
+- O backup `OneDrive/Desktop/quicklook-backup-2026-10-12.git` foi apagado pelo José. Conferi que a pasta não existe mais.
+- Dependabot fica desligado: sem utilidade para um projeto deste tamanho. A #30 saiu de `docs/PENDENCIAS.md`.
+
+Os itens 1 e 2 de "Aberto" estão resolvidos. Os dados antigos seguem só nos checkpoints locais do T3.
