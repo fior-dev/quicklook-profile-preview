@@ -28,6 +28,9 @@ export const fixtures = {
   topcard: read("person-topcard.html"),
   experience: read("person-experience.html"),
   company: read("company.json"),
+  mutual: read("person-mutual.json"),
+  jobs: read("company-jobs.html"),
+  companyHome: read("company-home.html"),
 };
 
 // `fetch` falso do LinkedIn: roteia por URL e devolve as fixtures gravadas. `overrides` troca uma rota por vez.
@@ -35,6 +38,9 @@ export const linkedinFetch = (overrides: Partial<Record<keyof typeof fixtures | 
   vi.fn(async (url: string) => {
     const pick = (k: keyof typeof fixtures | "me", body: string) => (overrides[k] ?? (() => new Response(body)))();
     if (url.startsWith("/voyager/api/me")) return pick("me", JSON.stringify({ included: [{ publicIdentifier: "eu-mesmo" }] }));
+    if (url.includes("TopCardSupplementary")) return pick("mutual", fixtures.mutual);
+    if (url.includes("/jobs/")) return pick("jobs", fixtures.jobs);
+    if (/^\/company\/[^/]+\/$/.test(url)) return pick("companyHome", fixtures.companyHome);
     if (url.includes("/organization/companies")) return pick("company", fixtures.company);
     if (url.includes("memberIdentity")) return pick("profile", fixtures.profile);
     if (url.includes("profilePositionGroups")) return pick("positions", fixtures.positions);

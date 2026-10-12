@@ -1,0 +1,20 @@
+{
+  "data": { "$type": "com.linkedin.restli.common.CollectionResponse", "*elements": ["urn:li:fsd_profile:ACoAAexemplo0000"] },
+  "included": [
+    {
+      "$type": "com.linkedin.voyager.dash.relationships.Insight",
+      "entityUrn": "urn:li:fsd_relInsight:(urn:li:fsd_profile:ACoAAeu,urn:li:fsd_profile:ACoAAexemplo0000,PROFILE)",
+      "text": {
+        "text": "Ana Exemplo, Bruno Exemplo, and 18 other mutual connections",
+        "attributesV2": [
+          { "detailDataUnion": { "profileFullName": "urn:li:fsd_profile:ACoAAana" }, "length": 11, "start": 0 },
+          { "detailDataUnion": { "style": "BOLD" }, "length": 11, "start": 0 },
+          { "detailDataUnion": { "profileFullName": "urn:li:fsd_profile:ACoAAbruno" }, "length": 13, "start": 13 }
+        ]
+      }
+    },
+    { "$type": "com.linkedin.voyager.dash.identity.profile.Profile", "entityUrn": "urn:li:fsd_profile:ACoAAana", "firstName": "Ana", "lastName": "Exemplo" },
+    { "$type": "com.linkedin.voyager.dash.identity.profile.Profile", "entityUrn": "urn:li:fsd_profile:ACoAAbruno", "firstName": "Bruno", "lastName": "Exemplo" },
+    { "$type": "com.linkedin.voyager.dash.relationships.MemberRelationship", "entityUrn": "urn:li:fsd_memberRelationship:ACoAAexemplo0000" }
+  ]
+}

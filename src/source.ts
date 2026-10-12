@@ -34,12 +34,12 @@ const POSITIONS = "/voyager/api/identity/dash/profilePositionGroups?q=viewee&pro
 const TOPCARD_BYTES = 320_000; // o grau de conexão aparece a ~15% de uma página de ~1 MB
 const EXPERIENCE_BYTES = 64_000; // o primeiro cargo aparece nos primeiros ~35 KB
 
-const csrfFrom = (cookie: string) => {
+export const csrfFrom = (cookie: string) => {
   const m = /JSESSIONID=(?:"([^"]+)"|([^;]+))/.exec(cookie);
   return m ? (m[1] ?? m[2]) : "";
 };
 
-class RateLimited extends Error {}
+export class RateLimited extends Error {}
 
 const PRONOUNS: Record<string, string> = { HE_HIM: "he/him", SHE_HER: "she/her", THEY_THEM: "they/them" };
 
@@ -77,7 +77,7 @@ export const titleFrom = (html: string, company: string): string | undefined => 
 };
 
 // Lê só o começo da resposta: cancela o fluxo ao passar do limite ou quando `done` aceita o texto.
-async function readUpTo(res: Response, max: number, done: (text: string) => boolean): Promise<string> {
+export async function readUpTo(res: Response, max: number, done: (text: string) => boolean): Promise<string> {
   if (!res.body?.getReader) return (await res.text()).slice(0, max);
   const reader = res.body.getReader();
   const decoder = new TextDecoder();

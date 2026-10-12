@@ -1,4 +1,5 @@
 import { t } from "./i18n";
+import type { Detail } from "./details";
 import type { CompanySummary, PersonSummary } from "./source";
 
 export const profileUrl = (slug: string) => `https://www.linkedin.com/in/${encodeURIComponent(slug)}/`;
@@ -12,7 +13,7 @@ export const formatSince = (since: NonNullable<PersonSummary["since"]>, lang: st
   new Intl.DateTimeFormat(lang || undefined, { month: "short", year: "numeric" }).format(new Date(since.year, since.month - 1));
 
 // Modelo fixo: título, linhas "- Campo: valor" na ordem abaixo, depois o Sobre. Só entra o que foi carregado.
-export function personMarkdown(p: Partial<PersonSummary>, lang: string): string {
+export function personMarkdown(p: Partial<PersonSummary>, lang: string, details: Detail[] = []): string {
   const lines = [`# ${p.name}${p.pronouns ? ` (${p.pronouns})` : ""}`, ""];
   if (p.headline) lines.push(p.headline, "");
   const job = [p.title, p.company].filter(Boolean).join(" · ");
@@ -24,6 +25,7 @@ export function personMarkdown(p: Partial<PersonSummary>, lang: string): string 
   ];
   for (const [k, v] of fields) if (v) lines.push(`- ${k}: ${v}`);
   if (p.about) lines.push("", `## ${t("exportAbout")}`, "", p.about);
+  lines.push(...detailsMarkdown(details));
   return lines.join("\n") + "\n";
 }
 
@@ -35,7 +37,7 @@ export const sizeText = (size: NonNullable<CompanySummary["size"]>) =>
   t("companySize", size.end ? `${size.start}–${size.end}` : `${size.start}+`);
 
 // Mesmo modelo fixo da Pessoa: título, tagline, linhas "- Campo: valor", link da página.
-export function companyMarkdown(c: Partial<CompanySummary>, lang: string): string {
+export function companyMarkdown(c: Partial<CompanySummary>, lang: string, details: Detail[] = []): string {
   const lines = [`# ${c.name}`, ""];
   if (c.tagline) lines.push(c.tagline, "");
   const fields: [string, string | undefined][] = [
@@ -47,5 +49,30 @@ export function companyMarkdown(c: Partial<CompanySummary>, lang: string): strin
     [t("exportPage"), c.slug && companyUrl(c.slug)],
   ];
   for (const [k, v] of fields) if (v) lines.push(`- ${k}: ${v}`);
+  lines.push(...detailsMarkdown(details));
   return lines.join("\n") + "\n";
+}
+
+// Seções de Detalhes já carregadas, numa ordem fixa; as que o Usuário não abriu não entram.
+export function detailsMarkdown(details: Detail[]): string[] {
+  const order: Detail["kind"][] = ["experience", "mutual", "jobs", "known"];
+  const lines: string[] = [];
+  for (const kind of order) {
+    const d = details.find((x) => x.kind === kind);
+    if (!d) continue;
+    const body =
+      d.kind === "experience"
+        ? d.items.map((i) => `- ${i.title} · ${i.company} (${i.dates})`)
+        : d.kind === "jobs"
+          ? d.items.map((j) => `- ${j.title}${j.location ? ` — ${j.location}` : ""}: ${j.url}`)
+          : d.kind === "mutual"
+            ? d.text
+              ? [d.text]
+              : []
+            : d.text
+              ? [`${d.text}: ${d.url}`]
+              : [];
+    if (body.length) lines.push("", `## ${t(`detail_${kind}`)}`, "", ...body);
+  }
+  return lines;
 }
