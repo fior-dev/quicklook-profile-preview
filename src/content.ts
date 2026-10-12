@@ -78,6 +78,8 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   let shown: HTMLAnchorElement | null = null;
   let ownSlug: Promise<string | null> | undefined;
   let settings = DEFAULTS;
+  // Só funciona depois que o Usuário leu e aceitou o aviso de primeiro uso (ADR 0001).
+  const active = () => settings.enabled && settings.accepted;
 
   const hide = () => {
     // Fechar com o foco dentro do Card devolve o foco ao Gatilho.
@@ -100,7 +102,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   watchSettings(deps.settings, (s) => {
     settings = s;
     setLang(s.lang);
-    if (!s.enabled) hide();
+    if (!(s.enabled && s.accepted)) hide();
   });
 
   card.host.addEventListener("mouseover", () => clearTimeout(close));
@@ -111,7 +113,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   const alive = () => !!chrome.runtime?.id || (card.host.remove(), false);
 
   const openCard = async (a: HTMLAnchorElement, { kind, slug }: Target, focus = false) => {
-    if (!alive() || !settings.enabled) return;
+    if (!alive() || !active()) return;
     const id = ++current;
     if (kind === "person") {
       ownSlug ??= fetchOwnSlug({ fetch: deps.fetch, cookie: cookie() });
@@ -152,7 +154,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   // Alt+Q com um Gatilho focado abre o Card e leva o foco para ele; Esc fecha e devolve o foco ao Gatilho.
   doc.addEventListener("keydown", (e) => {
     if (e.key === "Escape") return hide();
-    if (!e.altKey || e.code !== "KeyQ" || !settings.enabled) return;
+    if (!e.altKey || e.code !== "KeyQ" || !active()) return;
     const a = triggerOf(doc.activeElement);
     const target = a && targetOf(a);
     if (!a || !target) return;
@@ -164,7 +166,7 @@ export function start(doc: Document, deps: { fetch: typeof fetch; storage: Store
   });
 
   doc.addEventListener("mouseover", (e) => {
-    if (!alive() || !settings.enabled) return;
+    if (!alive()) return;
     const a = triggerOf(e.target);
     const target = a && targetOf(a);
     if (!a || !target) return;

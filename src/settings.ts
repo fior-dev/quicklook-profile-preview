@@ -1,5 +1,5 @@
-export type Settings = { enabled: boolean; lang: "auto" | "pt_BR" | "en"; delay: number };
-export const DEFAULTS: Settings = { enabled: true, lang: "auto", delay: 400 };
+export type Settings = { enabled: boolean; accepted: boolean; lang: "auto" | "pt_BR" | "en"; delay: number };
+export const DEFAULTS: Settings = { enabled: true, accepted: false, lang: "auto", delay: 400 };
 export const DELAYS = [200, 400, 700, 1000];
 
 // O que o código usa de chrome.storage.sync; o teste passa um falso.

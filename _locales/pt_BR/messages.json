@@ -172,5 +172,59 @@
   },
   "detailLimited": {
     "message": "O LinkedIn está limitando as requisições. Tente de novo em instantes."
+  },
+  "welcomeTitle": {
+    "message": "Antes de começar"
+  },
+  "welcomeIntro": {
+    "message": "O QuickLook mostra um resumo de quem você encontra no LinkedIn sem sair da página. Para isso, ele lê as mesmas informações que o LinkedIn já mostra a você, só quando você passa o mouse."
+  },
+  "welcomeDoesTitle": {
+    "message": "O que ele não faz"
+  },
+  "welcomeNo1": {
+    "message": "Não envia seus dados nem os de outras pessoas para ninguém. Tudo fica no seu navegador."
+  },
+  "welcomeNo2": {
+    "message": "Não manda mensagens, não conecta, não segue e não clica por você."
+  },
+  "welcomeNo3": {
+    "message": "Não lê nada em segundo plano: só quando você pede."
+  },
+  "welcomeRiskTitle": {
+    "message": "O que você precisa saber"
+  },
+  "welcomeRisk1": {
+    "message": "O LinkedIn tem regras próprias de uso, e elas não permitem extensões que leem perfis, mesmo uma discreta como esta."
+  },
+  "welcomeRisk2": {
+    "message": "Na prática, o risco é baixo: o QuickLook faz poucas consultas, só quando você pede, e se limita sozinho para não exagerar. Mas não é zero: em teoria, o LinkedIn pode limitar a sua conta ou pedir a remoção da extensão."
+  },
+  "welcomeConfirm": {
+    "message": "Ao continuar, você confirma que leu este aviso e que a decisão de usar é sua. O QuickLook é independente, não tem vínculo com o LinkedIn e não responde por medidas que o LinkedIn tome sobre a sua conta."
+  },
+  "welcomeReadAlso": {
+    "message": "Leia também:"
+  },
+  "welcomeUserAgreement": {
+    "message": "User Agreement do LinkedIn"
+  },
+  "welcomeAccept": {
+    "message": "Entendi e quero usar"
+  },
+  "welcomeDecline": {
+    "message": "Agora não"
+  },
+  "welcomeAccepted": {
+    "message": "Tudo certo. Pode fechar esta aba e voltar ao LinkedIn."
+  },
+  "welcomeDeclined": {
+    "message": "Sem problema. A extensão fica desligada; você pode aceitar depois pelo ícone dela na barra do Chrome."
+  },
+  "popupNeedsAccept": {
+    "message": "Falta ler e aceitar o aviso para começar."
+  },
+  "popupReview": {
+    "message": "Ler aviso"
   }
 }

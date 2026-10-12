@@ -10,7 +10,7 @@ QuickLook - Profile Preview · Atualizada em / Updated: 2026-10-01
 
 **Onde ficam.**
 - Cache de perfis já vistos: na memória de sessão do navegador (`chrome.storage.session`). Expira em 24 horas e some quando você fecha o navegador. O botão "Limpar cache" do popup apaga tudo na hora.
-- Configurações (ligar/desligar, idioma, atraso do hover) e a marca de que você já viu o aviso do Sales Navigator/Recruiter: em `chrome.storage.sync`. O Chrome pode sincronizar esses valores com a sua conta Google; eles não contêm dados do LinkedIn.
+- Configurações (ligar/desligar, idioma, atraso do hover) a marca de que você aceitou o aviso de primeiro uso e a de que já viu o aviso do Sales Navigator/Recruiter: em `chrome.storage.sync`. O Chrome pode sincronizar esses valores com a sua conta Google; eles não contêm dados do LinkedIn.
 
 **O que nunca acontece.**
 - Nenhum dado seu ou de outras pessoas é enviado a servidores do desenvolvedor ou de terceiros. Não existe servidor.
@@ -34,7 +34,7 @@ QuickLook - Profile Preview · Atualizada em / Updated: 2026-10-01
 
 **Where it is stored.**
 - Cache of profiles already seen: in the browser's session memory (`chrome.storage.session`). It expires after 24 hours and disappears when you close the browser. The popup's "Clear cache" button erases it immediately.
-- Settings (on/off, language, hover delay) and the flag that you already saw the Sales Navigator/Recruiter notice: in `chrome.storage.sync`. Chrome may sync these values with your Google account; they contain no LinkedIn data.
+- Settings (on/off, language, hover delay) the flag that you accepted the first-use notice and the one that you already saw the Sales Navigator/Recruiter notice: in `chrome.storage.sync`. Chrome may sync these values with your Google account; they contain no LinkedIn data.
 
 **What never happens.**
 - No data about you or other people is sent to the developer's or any third party's servers. There is no server.

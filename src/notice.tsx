@@ -11,8 +11,8 @@ const SEEN = "interestNoticeSeen";
 // ponytail: só olha o caminho ao carregar; navegação interna para /sales/ sem recarregar não mostra o aviso.
 export async function showInterestNotice(doc: Document, src: SettingsSource, path = doc.location.pathname) {
   if (!/^\/(sales|talent)(\/|$)/.test(path)) return;
-  const got = await src.get([SEEN, "enabled", "lang"]);
-  if (got[SEEN] || got.enabled === false) return;
+  const got = await src.get([SEEN, "enabled", "accepted", "lang"]);
+  if (got[SEEN] || got.enabled === false || got.accepted !== true) return;
   setLang(got.lang ?? "auto"); // o aviso pode sair antes de watchSettings aplicar o idioma escolhido
 
   const host = doc.createElement("div");
