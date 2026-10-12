@@ -1,0 +1,44 @@
+{
+  "data": {
+    "entityUrn": "urn:li:collectionResponse:exemplo",
+    "paging": { "count": 10, "start": 0, "links": [] },
+    "*elements": ["urn:li:fs_normalized_company:1000001"],
+    "$type": "com.linkedin.restli.common.CollectionResponse"
+  },
+  "included": [
+    {
+      "entityUrn": "urn:li:fs_followingInfo:urn:li:company:1000001",
+      "following": false,
+      "followerCount": 80604,
+      "$type": "com.linkedin.voyager.common.FollowingInfo"
+    },
+    { "localizedName": "Desenvolvimento de software", "entityUrn": "urn:li:fs_industry:4", "$type": "com.linkedin.voyager.common.Industry" },
+    {
+      "$type": "com.linkedin.voyager.organization.Company",
+      "entityUrn": "urn:li:fs_normalized_company:1000001",
+      "dashEntityUrn": "urn:li:fsd_company:1000001",
+      "universalName": "empresa-ficticia",
+      "name": "Empresa Fictícia Labs",
+      "tagline": "Plataforma fictícia usada nos testes da extensão.",
+      "description": "Texto longo da Empresa fictícia.",
+      "companyPageUrl": "https://empresa-ficticia.example",
+      "url": "https://www.linkedin.com/company/empresa-ficticia",
+      "staffCount": 501,
+      "staffCountRange": { "start": 51, "end": 200, "$type": "com.linkedin.voyager.organization.shared.StaffCountRange" },
+      "headquarter": { "country": "BR", "geographicArea": "SC", "city": "Florianópolis", "postalCode": "88000", "$type": "com.linkedin.common.Address" },
+      "foundedOn": { "year": 2012, "$type": "com.linkedin.common.Date" },
+      "industries": ["Desenvolvimento de software"],
+      "*companyIndustries": ["urn:li:fs_industry:4"],
+      "*followingInfo": "urn:li:fs_followingInfo:urn:li:company:1000001",
+      "logos": {
+        "logo": {
+          "artifacts": [{ "width": 200, "height": 200, "fileIdentifyingUrlPathSegment": "200_200/logo-exemplo" }],
+          "rootUrl": "https://media.licdn.com/dms/image/v2/EXEMPLO/company-logo_",
+          "$type": "com.linkedin.common.VectorImage"
+        },
+        "$type": "com.linkedin.voyager.organization.CompanyLogos"
+      },
+      "firstDegreeConnectionsThatFollow": ["urn:li:fs_normalized_profile:ACoAAexemplo1"]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { t } from "./i18n";
-import type { PersonSummary } from "./source";
+import type { CompanySummary, PersonSummary } from "./source";
 
 export const profileUrl = (slug: string) => `https://www.linkedin.com/in/${encodeURIComponent(slug)}/`;
 
@@ -28,3 +28,24 @@ export function personMarkdown(p: Partial<PersonSummary>, lang: string): string 
 }
 
 export const fileName = (slug: string) => `${slug.replace(/[^\w.-]+/g, "_")}.md`;
+
+export const companyUrl = (slug: string) => `https://www.linkedin.com/company/${encodeURIComponent(slug)}/`;
+
+export const sizeText = (size: NonNullable<CompanySummary["size"]>) =>
+  t("companySize", size.end ? `${size.start}–${size.end}` : `${size.start}+`);
+
+// Mesmo modelo fixo da Pessoa: título, tagline, linhas "- Campo: valor", link da página.
+export function companyMarkdown(c: Partial<CompanySummary>, lang: string): string {
+  const lines = [`# ${c.name}`, ""];
+  if (c.tagline) lines.push(c.tagline, "");
+  const fields: [string, string | undefined][] = [
+    [t("exportIndustry"), c.industry],
+    [t("exportSize"), c.size && sizeText(c.size)],
+    [t("exportHeadquarters"), c.headquarters],
+    [t("exportFollowers"), c.followers !== undefined ? new Intl.NumberFormat(lang || undefined).format(c.followers) : undefined],
+    [t("exportWebsite"), c.website],
+    [t("exportPage"), c.slug && companyUrl(c.slug)],
+  ];
+  for (const [k, v] of fields) if (v) lines.push(`- ${k}: ${v}`);
+  return lines.join("\n") + "\n";
+}

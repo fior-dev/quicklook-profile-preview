@@ -1,14 +1,15 @@
 import { render } from "preact";
 import { useState } from "preact/hooks";
-import { fileName, formatSince, messageUrl, personMarkdown, profileUrl } from "./export";
+import { companyMarkdown, companyUrl, fileName, formatSince, messageUrl, personMarkdown, profileUrl, sizeText } from "./export";
 import { t } from "./i18n";
-import type { Field, PersonSummary } from "./source";
+import type { CompanySummary, Field, PersonSummary } from "./source";
 import css from "./style.css?inline";
 
 export type Placeholder = { name?: string; photo?: string };
 export type CardState =
   | { kind: "loading"; placeholder: Placeholder }
   | { kind: "ready"; person: Partial<PersonSummary>; failed: Field[]; lang: string }
+  | { kind: "company"; company: Partial<CompanySummary>; failed: Field[]; lang: string }
   | { kind: "limited"; mode: "wait" | "backoff"; retryAt: number }
   | { kind: "error" };
 
@@ -88,35 +89,38 @@ const View = ({ state, theme, onClose }: { state: CardState; theme: string; onCl
       </p>
     )}
     {state.kind === "ready" && <Summary {...state} />}
+    {state.kind === "company" && <CompanyView {...state} />}
   </div>
 );
 
 const BTN = "rounded border border-gray-300 px-2 py-1 text-xs dark:border-gray-600";
 
-// Copiar e salvar usam a Exportação do que já foi carregado; mensagem e perfil só abrem páginas do LinkedIn.
-const Actions = ({ person: p, lang }: { person: Partial<PersonSummary>; lang: string }) => {
+type ActionsProps = { text: () => string; fileSlug: string; pageUrl?: string; messageUrl?: string };
+
+// Copiar e salvar usam a Exportação do que já foi carregado; mensagem e página só abrem páginas do LinkedIn.
+const Actions = ({ text, fileSlug, pageUrl, messageUrl: msg }: ActionsProps) => {
   const [done, setDone] = useState<"copied" | "saved" | "failed">();
   const copy = () =>
-    navigator.clipboard.writeText(personMarkdown(p, lang)).then(
+    navigator.clipboard.writeText(text()).then(
       () => setDone("copied"),
       () => setDone("failed"),
     );
   const save = () => {
-    const url = URL.createObjectURL(new Blob([personMarkdown(p, lang)], { type: "text/markdown" }));
-    const a = Object.assign(document.createElement("a"), { href: url, download: fileName(p.slug ?? "perfil") });
+    const url = URL.createObjectURL(new Blob([text()], { type: "text/markdown" }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: fileName(fileSlug) });
     a.click();
     URL.revokeObjectURL(url);
     setDone("saved");
   };
   return (
     <div role="group" aria-label={t("actionsLabel")} class="mt-2 flex flex-wrap items-center gap-1">
-      {p.urn && (
-        <a class={BTN} href={messageUrl(p.urn)} target="_blank" rel="noopener noreferrer">
+      {msg && (
+        <a class={BTN} href={msg} target="_blank" rel="noopener noreferrer">
           {t("actionMessage")}
         </a>
       )}
-      {p.slug && (
-        <a class={BTN} href={profileUrl(p.slug)} target="_blank" rel="noopener noreferrer">
+      {pageUrl && (
+        <a class={BTN} href={pageUrl} target="_blank" rel="noopener noreferrer">
           {t("actionProfile")}
         </a>
       )}
@@ -132,6 +136,44 @@ const Actions = ({ person: p, lang }: { person: Partial<PersonSummary>; lang: st
     </div>
   );
 };
+
+const Partial_ = ({ failed }: { failed: Field[] }) =>
+  failed.length > 0 ? (
+    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+      {t("cardPartial")}{" "}
+      <a class="underline" href={reportUrl(failed)} target="_blank" rel="noopener noreferrer">
+        {t("cardReport")}
+      </a>
+    </p>
+  ) : null;
+
+const CompanyView = ({ company: c, failed, lang }: { company: Partial<CompanySummary>; failed: Field[]; lang: string }) => (
+  <>
+    <div class="flex gap-2">
+      <Avatar src={c.logo} />
+      <div>
+        <p class="font-semibold">{c.name}</p>
+        {c.followers !== undefined && (
+          <p class="text-xs text-gray-500 dark:text-gray-400">{t("companyFollowers", new Intl.NumberFormat(lang || undefined).format(c.followers))}</p>
+        )}
+      </div>
+    </div>
+    {c.tagline && <p class="mt-1 text-gray-600 dark:text-gray-400">{c.tagline}</p>}
+    {(c.industry || c.size) && (
+      <p class="mt-1">{[c.industry, c.size && sizeText(c.size)].filter(Boolean).join(" · ")}</p>
+    )}
+    {c.headquarters && <p class="text-gray-500 dark:text-gray-400">{c.headquarters}</p>}
+    {c.website && (
+      <p class="truncate">
+        <a class="text-blue-700 underline dark:text-blue-400" href={c.website} target="_blank" rel="noopener noreferrer">
+          {c.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+        </a>
+      </p>
+    )}
+    <Actions text={() => companyMarkdown(c, lang)} fileSlug={c.slug ?? "empresa"} pageUrl={c.slug && companyUrl(c.slug)} />
+    <Partial_ failed={failed} />
+  </>
+);
 
 const Summary = ({ person: p, failed, lang }: { person: Partial<PersonSummary>; failed: Field[]; lang: string }) => {
   const since = p.since && formatSince(p.since, lang);
@@ -156,15 +198,8 @@ const Summary = ({ person: p, failed, lang }: { person: Partial<PersonSummary>; 
       )}
       {p.location && <p class="text-gray-500 dark:text-gray-400">{p.location}</p>}
       {p.about && <About text={p.about} />}
-      <Actions person={p} lang={lang} />
-      {failed.length > 0 && (
-        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          {t("cardPartial")}{" "}
-          <a class="underline" href={reportUrl(failed)} target="_blank" rel="noopener noreferrer">
-            {t("cardReport")}
-          </a>
-        </p>
-      )}
+      <Actions text={() => personMarkdown(p, lang)} fileSlug={p.slug ?? "perfil"} pageUrl={p.slug && profileUrl(p.slug)} messageUrl={p.urn && messageUrl(p.urn)} />
+      <Partial_ failed={failed} />
     </>
   );
 };

@@ -12,8 +12,20 @@ export type PersonSummary = {
   location: string;
   degree: 1 | 2 | 3;
 };
-export type Field = "name" | "headline" | "company" | "title" | "degree";
+export type Field = "name" | "headline" | "company" | "title" | "degree" | "industry";
 export type SourceResult = { person: Partial<PersonSummary>; failed: Field[]; rateLimited?: boolean };
+export type CompanySummary = {
+  slug: string;
+  name: string;
+  tagline: string;
+  industry: string;
+  size: { start: number; end?: number };
+  headquarters: string;
+  followers: number;
+  website: string;
+  logo: string;
+};
+export type CompanyResult = { company: Partial<CompanySummary>; failed: Field[]; rateLimited?: boolean };
 export type SourceDeps = { fetch: typeof fetch; cookie: string; timeoutMs?: number };
 
 // Formatos vistos em capturas reais do LinkedIn em 01/10/2026 (ver tests/fixtures), exceto onde marcado.
@@ -176,5 +188,48 @@ export async function fetchOwnSlug(deps: SourceDeps): Promise<string | null> {
     return pool.find((o) => typeof o?.publicIdentifier === "string")?.publicIdentifier ?? null;
   } catch {
     return null;
+  }
+}
+
+// Formato visto em captura real de 11/10/2026 (tests/fixtures/company.json, anonimizada): uma requisição traz tudo.
+const COMPANY = "/voyager/api/organization/companies?q=universalName&universalName=";
+
+export async function fetchCompanySummary(slug: string, deps: SourceDeps): Promise<CompanyResult> {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), deps.timeoutMs ?? 8000);
+  try {
+    const res = await deps.fetch(COMPANY + encodeURIComponent(slug), {
+      credentials: "include",
+      signal: ctl.signal,
+      headers: { accept: "application/vnd.linkedin.normalized+json+2.1", "csrf-token": csrfFrom(deps.cookie) },
+    });
+    if (res.status === 429) return { company: {}, failed: ["name"], rateLimited: true };
+    if (!res.ok) return { company: {}, failed: ["name"] };
+    const json: any = await res.json();
+    const pool: any[] = [json?.data, ...(json?.data?.elements ?? []), ...(json?.included ?? [])];
+    const c = pool.find((o) => typeof o?.universalName === "string" && typeof o?.name === "string");
+    if (!c) return { company: {}, failed: ["name"] };
+
+    const company: Partial<CompanySummary> = { slug, name: c.name };
+    const failed: Field[] = [];
+    if (c.tagline) company.tagline = c.tagline;
+    // O setor vem em `industries` (texto) e, resolvido, em um objeto Industry de `*companyIndustries`.
+    const industry = c.industries?.[0] ?? pool.find((o) => o?.entityUrn === c["*companyIndustries"]?.[0])?.localizedName;
+    if (industry) company.industry = industry;
+    else if (c["*companyIndustries"]?.length) failed.push("industry");
+    if (c.staffCountRange?.start) company.size = { start: c.staffCountRange.start, end: c.staffCountRange.end };
+    const hq = c.headquarter;
+    const place = hq && [hq.city, hq.geographicArea, hq.country].filter(Boolean).join(", ");
+    if (place) company.headquarters = place;
+    const followers = pool.find((o) => o?.entityUrn === c["*followingInfo"])?.followerCount;
+    if (typeof followers === "number") company.followers = followers;
+    if (c.companyPageUrl?.startsWith("https://") || c.companyPageUrl?.startsWith("http://")) company.website = c.companyPageUrl;
+    const logo = photoFrom({ displayImage: { vectorImage: c.logos?.logo } });
+    if (logo) company.logo = logo;
+    return { company, failed };
+  } catch {
+    return { company: {}, failed: ["name"] };
+  } finally {
+    clearTimeout(timer);
   }
 }
