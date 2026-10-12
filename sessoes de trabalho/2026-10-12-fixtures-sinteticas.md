@@ -39,3 +39,11 @@ Nada a corrigir no meio do caminho. O script de troca (`.scratch/sintetizar.mjs`
 O José apagou à mão os 10 `~/Downloads/quicklook-*.json` (estão na Lixeira). Conferi que nenhum está no repositório: `find` na árvore inteira (incluindo `.scratch/` e ignorados) e `git log --all --name-only` não acham `quicklook-*.json`; grep no conteúdo e no histórico pelos slugs dos perfis capturados e por `ajax:<dígitos>` (formato do `JSESSIONID`) também não acha nada. Removi a #16 de `docs/PENDENCIAS.md`. O José vai fazer logout e login no LinkedIn para renovar o `JSESSIONID`.
 
 Os de 11/10 (`quicklook-detalhes-*`, `quicklook-empresa-bubble`) nunca viraram fixture. Se a #6 precisar deles, a captura é refeita e anonimizada antes de entrar em `tests/fixtures/`.
+
+## Adendo: reescrita do histórico (#28, #29)
+
+Com autorização do José, instalei o `git-filter-repo` (pip, fora do PATH: `%APPDATA%\Python\Python314\Scripts`) e fiz backup com `git clone --mirror` em `OneDrive/Desktop/quicklook-backup-2026-10-12.git`. Rodei `.scratch/reescrever.py` só em `--refs main`, para não tocar nos checkpoints do T3 (`refs/t3/checkpoints/*`, nunca empurrados). O script troca os três blobs antigos das fixtures pelos sintéticos, tira nomes e IDs do texto em todas as versões e muda autor e committer para `163782359+fior-dev@users.noreply.github.com`. Empurrei só `main` com `--force-with-lease`. O `user.email` global agora é o noreply.
+
+Errei na primeira passada. Esta própria sessão, e o adendo da #16, citavam os IDs, os nomes completos e quatro slugs de perfil, e eu já tinha empurrado isso em `e006324` e `90671fb`. O grep no histórico reescrito achou "Double Degree student from…", que eu tinha escrito aqui. Rodei a reescrita de novo com essa troca. Lição: o arquivo de sessão que descreve a limpeza não pode citar o dado que está sendo limpo.
+
+Conferi depois: as 30 versões de `main` não têm nenhum dos trechos, todos os commits têm o noreply e os 79 testes passam. Mas `cf5aada` (SHA antigo) ainda responde na API do GitHub com o e-mail antigo. A remoção definitiva depende do suporte do GitHub (#28).
