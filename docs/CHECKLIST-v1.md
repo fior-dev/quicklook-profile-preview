@@ -10,8 +10,10 @@ Estado em 12/10/2026. A fonte de "validado" é o que o José escreveu na convers
 |---|---|---|
 | 1, 2, 3, 13 | Card abre em link e avatar de Pessoa e Empresa, no feed, busca, perfil, Empresa e mensagens | "o card abre e traz infos em todas as telas do linkedin" |
 | 18 a 23, 35 | Resumo da Pessoa e da Empresa | "está entregando nas funcionalidades" |
+| 7, 8, 15 | `Esc` e botão X fecham o Card; não abre sobre o próprio perfil | "botão X e esc para fechar o card" e "não abrir o card sobre o proprio perfil" (12/10) |
 | 24 | Experiências passadas | "as experiências estão sendo puxadas corretamente" |
-| 36, 37 | Pessoas que o Usuário conhece e Vagas, na Empresa | ele pediu para manter as vagas e disse que as pessoas estão ótimas |
+| 26 | Conexões em comum | "conexões em comum aparecem" (12/10) |
+| 36 | Pessoas que o Usuário conhece, na Empresa | "o formato que vc traz as pessoas já está ótimo" |
 | 39, 40 | Enviar mensagem abre a página de mensagem, sem enviar | "ele abre a pagina de envio de mensagem e isso ficou bom" |
 | 41 a 45 | Copiar, salvar `.md`, confirmação, abrir perfil | "todos os botões estão funcionando conforme esperado" |
 | 65, 67 | Tema claro e escuro; português e inglês | "é claro escuro funcionando português e inglês também" |
@@ -30,13 +32,12 @@ Estado em 12/10/2026. A fonte de "validado" é o que o José escreveu na convers
 
 ## Sem validação manual (só teste automático)
 
-4 a 10, 14 a 17, 26, 32, 46 a 64, 66, 68 a 71. Entre elas, as que o José ainda pode querer ver no Chrome antes de publicar:
+4 a 6, 9, 10, 14, 16, 17, 32, 37 (vagas), 46 a 64, 66, 68 a 71. O José disse confiar nos testes automáticos, exceto no aviso de primeiro uso, que ele quer conferir à mão. A lista, para referência:
 
-- 7, 8 (`Esc` e botão X), 15 (não abre sobre o próprio perfil), 16 (links promocionais)
-- 26 (conexões em comum)
+- 16 (links promocionais) e 37 (vagas)
 - 55 a 60 (popup: ligar/desligar, idioma, delay, limpar cache, links, aplicar sem recarregar)
 - 61 a 64 (Sinal de interesse: botão no popup e aviso em `/sales/` e `/talent/`)
 - 46 a 48 (Card parcial e "Reportar problema")
-- Aviso de primeiro uso (ticket fora do spec original, ADR 0001): aceitar, recusar, e o Card não abrir antes do aceite
+- **Aviso de primeiro uso** (fora do spec original, ADR 0001): aceitar, recusar, e o Card não abrir antes do aceite. **O José vai validar à mão.**
 
 As histórias de mantenedor (72 a 76) e as de privacidade (68 a 71) não dependem de teste no navegador; ver `PRIVACY.md`, `LICENSE` e `tests/`.
