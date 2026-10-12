@@ -11,7 +11,7 @@
 | 14 | Teto de 20 perfis/min do Guardião não é atômico entre abas e pode estourar em 1 ou 2 perfis | trancar via service worker se importar | ticket #5 |
 | 16 | Apagar de `Downloads` os `quicklook-*.json` (dados reais de terceiros; os de 01/10 já viraram fixtures anonimizadas, os de 11/10 ainda não: `quicklook-detalhes-*`, `quicklook-empresa-bubble`) | José | sessão 2026-10-01 |
 | 17 | Cookie `li_at` foi colado na conversa; José fez logout das sessões. Não colar cookies de novo | — | sessão 2026-10-01 |
-| 20 | Depois da v1, se houver demanda: **formação**, **dados de contato**, **postagens** (Pessoa e Empresa) e **Perfil secundário (#13)**. Todos precisam de captura de rede (`.scratch/capturar-rede.js`); os #11 e #12 foram fechados como fora da v1 | José, rodar a captura | decisão de 12/10 |
+| 20 | Depois da v1, se houver demanda: **formação** (história 25), **contato** (29 a 31), **postagens** (27, 28, 38). Precisam de captura de rede (`.scratch/capturar-rede.js`). Fora da v1: issues #11 e #12; o PT/EN (histórias 33 e 34, issue #13) foi descartado | José, rodar a captura | decisão de 12/10; `docs/CHECKLIST-v1.md` |
 | 21 | Aviso do Sales Navigator só olha o caminho ao carregar a página; navegação interna sem recarregar não o mostra | — | ticket #16 |
 | 23 | A decoração `TopCardSupplementary-120` traz o grau (`memberDistance: DISTANCE_2`), seguidores e a Formação principal numa chamada só; pode substituir a leitura de 320 KB de HTML do grau. Falta ver o formato para 1º grau e 3º+ | captura de perfil 1º e 3º grau | captura de 11/10 |
 | 24 | Cargos agrupados na mesma empresa e a Formação ainda não foram vistos no parser de experiências (`experiencesFrom`); a lista inclui o cargo atual | captura de perfil com cargos agrupados | ticket #9 |
@@ -19,3 +19,4 @@
 | 22 | Card muito alto (Sobre expandido) passa da borda da tela; hoje a saída é arrastar pela alça do topo. Avaliar altura máxima com rolagem | — | feedback do José, 10/10 |
 | 26 | Revisar o texto do aviso de primeiro uso (`welcome*` em `_locales/*/messages.json`) e, se quiser peso jurídico, passar por advogado: a frase "não responde por medidas do LinkedIn" é intenção, não parecer | José | ADR 0001 |
 | 27 | Pacote da loja (#18): ícones 16/48/128, textos pt/en, justificativa de permissões, `.zip`; envio só com autorização | agente prepara, José autoriza | ticket #18 |
+| 28 | José conferir no Chrome, antes de publicar, o que está só em teste automático (lista em `docs/CHECKLIST-v1.md`, seção "Sem validação manual") | José | `docs/CHECKLIST-v1.md` |
