@@ -33,3 +33,9 @@ Nada a corrigir no meio do caminho. O script de troca (`.scratch/sintetizar.mjs`
 ## Arquivos desta sessão
 
 `tests/fixtures/person-topcard.html`, `tests/fixtures/person-experience.html`, `tests/fixtures/company-home.html`, `tests/details.test.ts`, `src/details.ts`, `docs/PENDENCIAS.md`, `sessoes de trabalho/2026-10-01-popup-tema-acoes-e-interesse.md`.
+
+## Adendo: capturas em Downloads (#16)
+
+O José apagou à mão os 10 `~/Downloads/quicklook-*.json` (estão na Lixeira). Conferi que nenhum está no repositório: `find` na árvore inteira (incluindo `.scratch/` e ignorados) e `git log --all --name-only` não acham `quicklook-*.json`; grep no conteúdo e no histórico pelos slugs dos perfis capturados e por `ajax:<dígitos>` (formato do `JSESSIONID`) também não acha nada. Removi a #16 de `docs/PENDENCIAS.md`. O José vai fazer logout e login no LinkedIn para renovar o `JSESSIONID`.
+
+Os de 11/10 (`quicklook-detalhes-*`, `quicklook-empresa-bubble`) nunca viraram fixture. Se a #6 precisar deles, a captura é refeita e anonimizada antes de entrar em `tests/fixtures/`.
