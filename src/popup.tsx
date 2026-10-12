@@ -27,6 +27,14 @@ export function Popup({ sync, session }: { sync: SettingsSource; session: Sessio
   return (
     <>
       <h1>{t("popupTitle")}</h1>
+      {!s.accepted && (
+        <div class="row" role="alert">
+          <span>{t("popupNeedsAccept")}</span>
+          <button type="button" onClick={() => chrome.runtime.openOptionsPage()}>
+            {t("popupReview")}
+          </button>
+        </div>
+      )}
       <label>
         {t("popupEnabled")}
         <input type="checkbox" checked={s.enabled} onChange={(e) => save({ enabled: e.currentTarget.checked })} />

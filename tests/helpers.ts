@@ -10,7 +10,7 @@ export const fakeChrome = () => ({
     getMessage: (k: string, subs: string[] = []) =>
       (messages[k]?.message ?? "").replace(/\$(\d)/g, (_: string, i: string) => subs[Number(i) - 1] ?? ""),
   },
-  runtime: { id: "test-extension", getManifest: () => ({ version: "9.9.9" }) },
+  runtime: { id: "test-extension", getManifest: () => ({ version: "9.9.9" }), openOptionsPage: vi.fn() },
 });
 
 export const memoryStorage = (): Store => {
@@ -50,7 +50,7 @@ export const linkedinFetch = (overrides: Partial<Record<keyof typeof fixtures | 
 
 // chrome.storage.sync falso: `set` dispara onChanged como o navegador faz nas outras abas.
 export const fakeSync = (initial: Record<string, unknown> = {}) => {
-  const data: Record<string, unknown> = { ...initial };
+  const data: Record<string, unknown> = { accepted: true, ...initial }; // por padrão o aviso de primeiro uso já foi aceito
   const listeners: ((c: Record<string, { newValue?: unknown }>) => void)[] = [];
   return {
     get: async (keys: string[]) => Object.fromEntries(keys.filter((k) => k in data).map((k) => [k, data[k]])),

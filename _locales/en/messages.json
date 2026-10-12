@@ -172,5 +172,59 @@
   },
   "detailLimited": {
     "message": "LinkedIn is limiting requests. Try again shortly."
+  },
+  "welcomeTitle": {
+    "message": "Before you start"
+  },
+  "welcomeIntro": {
+    "message": "QuickLook shows a summary of the people you come across on LinkedIn without leaving the page. To do that, it reads the same information LinkedIn already shows you, only when you hover."
+  },
+  "welcomeDoesTitle": {
+    "message": "What it does not do"
+  },
+  "welcomeNo1": {
+    "message": "It does not send your data, or anyone else's, to anyone. Everything stays in your browser."
+  },
+  "welcomeNo2": {
+    "message": "It does not send messages, connect, follow or click for you."
+  },
+  "welcomeNo3": {
+    "message": "It reads nothing in the background: only when you ask."
+  },
+  "welcomeRiskTitle": {
+    "message": "What you should know"
+  },
+  "welcomeRisk1": {
+    "message": "LinkedIn has its own rules of use, and they do not allow extensions that read profiles, even a discreet one like this."
+  },
+  "welcomeRisk2": {
+    "message": "In practice the risk is low: QuickLook makes few requests, only when you ask, and limits itself so it does not overdo it. But it is not zero: in theory, LinkedIn could restrict your account or ask for the extension to be removed."
+  },
+  "welcomeConfirm": {
+    "message": "By continuing, you confirm that you read this notice and that the decision to use it is yours. QuickLook is independent, has no affiliation with LinkedIn and is not responsible for any action LinkedIn takes on your account."
+  },
+  "welcomeReadAlso": {
+    "message": "Also read:"
+  },
+  "welcomeUserAgreement": {
+    "message": "LinkedIn User Agreement"
+  },
+  "welcomeAccept": {
+    "message": "I understand, let me use it"
+  },
+  "welcomeDecline": {
+    "message": "Not now"
+  },
+  "welcomeAccepted": {
+    "message": "All set. You can close this tab and go back to LinkedIn."
+  },
+  "welcomeDeclined": {
+    "message": "No problem. The extension stays off; you can accept later from its icon in the Chrome toolbar."
+  },
+  "popupNeedsAccept": {
+    "message": "Read and accept the notice to get started."
+  },
+  "popupReview": {
+    "message": "Read notice"
   }
 }
