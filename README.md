@@ -15,6 +15,12 @@
   <img alt="License MIT" src="https://img.shields.io/badge/license-MIT-blue">
 </p>
 
+<p align="center">
+  <img src="docs/media/demo.gif" width="860" alt="Hovering a name opens a card with the person's summary; then the card expands experience and mutual connections, shows a company with open jobs, and switches to dark mode">
+</p>
+
+<p align="center"><sub>Demo on a mock feed with fictional people. The card is the extension's real code. <a href="docs/media/demo.mp4">MP4 version</a>.</sub></p>
+
 ## What the card shows
 
 **People.** Name, pronouns, headline, current role and company, connection degree and the About section. Expand it to see work history and mutual connections.

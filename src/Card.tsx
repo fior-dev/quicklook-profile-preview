@@ -96,7 +96,7 @@ const View = ({ state, theme, onClose }: { state: CardState; theme: string; onCl
   </div>
 );
 
-const BTN = "rounded border border-gray-300 px-2 py-1 text-xs dark:border-gray-600";
+const BTN = "rounded border border-gray-300 px-2 py-1 text-xs text-inherit no-underline dark:border-gray-600"; // <a> sem cor própria herdava o azul padrão do navegador, ilegível no tema escuro
 
 type ActionsProps = { text: () => string; fileSlug: string; pageUrl?: string; messageUrl?: string };
 
@@ -231,7 +231,7 @@ const Partial_ = ({ failed }: { failed: Field[] }) =>
   failed.length > 0 ? (
     <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
       {t("cardPartial")}{" "}
-      <a class="underline" href={reportUrl(failed)} target="_blank" rel="noopener noreferrer">
+      <a class="underline text-inherit" href={reportUrl(failed)} target="_blank" rel="noopener noreferrer">
         {t("cardReport")}
       </a>
     </p>
